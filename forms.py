@@ -19,10 +19,11 @@ class CommentForm(FlaskForm):
     text = StringField('Comment: ', validators=[DataRequired()])
     repliesto = HiddenField('Reply')
 
-#class CommentAddForm(FlaskForm):
+
+class CommentModifyForm(FlaskForm):
     #username = StringField('Username: ', validators=[DataRequired()])
-#    data = StringField('Comment: ', validators=[DataRequired()])
-#    repliesto = StringField('Reply')
+    modifytext = StringField('Comment: ', validators=[DataRequired()])
+    modifyid = HiddenField('Reply')
 
 
 class DeleteForm(FlaskForm):

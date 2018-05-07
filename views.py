@@ -55,16 +55,25 @@ class SamplePageB(View):
         data = Comments.query.all()
         form = CommentForm()
         delform = DeleteForm()
-        #addform = CommentAddForm()
-        #print form.repliesto.data
-        #print 'x'
+        modifyform = CommentModifyForm()
+        #print modifyform.modifytext.data
+        #print modifyform.validate_on_submit()
+        #print form.validate_on_submit()
         if form.validate_on_submit():
             #print 'y'
-            #print form.repliesto.data
+            print form.repliesto.data
             comment = Comments(current_user.username, form.text.data, current_user.usertype, form.repliesto.data)
-            #print comment.text
+            print comment.text
             comment.add_comment()
             return redirect(url_for('sample_page_b'))
+
+        if modifyform.validate_on_submit():
+            data = Comments.query.filter_by(id=modifyform.modifyid.data).first()
+            data.modify_comment(modifyform.modifytext.data)
+            #print modifyform.modifytext.data
+            #print modifyform.modifyid.data
+            return redirect(url_for('sample_page_b'))
+
         if delform.id.data:
             deluser = Comments.query.filter_by(id=delform.id.data).first()
             #print deluser
@@ -74,7 +83,7 @@ class SamplePageB(View):
                 #print reply
                 reply.delete_comment()
             return redirect(url_for('sample_page_b'))
-        return render_template('forum.html', form=form, delform=delform, data=data, user=current_user)
+        return render_template('forum.html', form=form, delform=delform, modform=modifyform, data=data, user=current_user)
 
 
 #add users

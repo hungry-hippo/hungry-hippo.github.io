@@ -1,15 +1,36 @@
 <!doctype html>
 <head>
      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modalstyle.css') }}">
      <style>
          th {width: 20px;}
          td {text-align: right;}
+
      </style>
 </head>
 <body>
 <h1> Forum </h1>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+      <p><h1>Modify Your Comment </h1>
+        <form method="POST">
+            {{ modform.csrf_token }}
+            {{ modform.modifytext.label}} {{modform.modifytext(class_='modaltext')}}
+            {{ modform.modifyid(class_='modalid')}}
+            <input type="submit" id="modify" value="Modify">
+        </form>
+    </p>
+  </div>
+
+</div>
+
 {% for dat in data %}
-    <br><br>
+
     {% if dat.replyto==0 %}
         <table style="width:100%">
             <tr>
@@ -30,7 +51,10 @@
                     <td>
                         {# button to delete user #}
                         <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-                    </td>
+
+                        {# button to modify user #}
+                        <button id=m{{ dat.id }} onclick="modalopen('{{dat.id}}','{{dat.text}}')">Modify</button>
+                     </td>
                 {% endif %}
             </tr>
         </table>
@@ -50,11 +74,14 @@
                         <td>{{ reply.usertype }} </td>
                     </tr>
                     <tr>
-                        {% if user.usertype==3 or user.username==dat.username %}
+                        {% if user.usertype==3 or user.username==reply.username %}
                            <th>Action</th>
                            <td>
                                {# button to delete user #}
                                <button id={{ reply.id }} onclick=delid(id)>Delete</button>
+
+                               {# button to modify user #}
+                                <button id=m{{ reply.id }} onclick="modalopen('{{reply.id}}','{{reply.text}}')">Modify</button>
                            </td>
                         {% endif %}
                     </tr>
@@ -80,7 +107,7 @@
     <br>
 {% endfor %}
 
-
+<br><br><br><br><br><br>
 {# Comment Box #}
 <form method="POST">
     {{ form.csrf_token }}
@@ -94,11 +121,6 @@
 <br>
 
 
-<!--<form method="POST">
-    {{ form.text }}
-    {{ form.repliesto }}
-    <input id=button2 type="submit" hidden="true">
-</form>-->
 
 
 {# hidden field to pass delete id #}
@@ -130,15 +152,37 @@
 
         for(i=0; i<elements.length; i++) {
             elements[i].value = replyid;
-           // window.alert(elements[i]);
-
         }
 
-        //document.getElementById(('text')).value = replydata;
-        //window.alert(document.getElementById('repliesto').value);
-
-        //document.getElementById('button2').click();
-
     }
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+function modalopen(id, data) {
+    modal.style.display = "block";
+    document.getElementsByClassName("modaltext")[0].value= data;
+    document.getElementsByClassName("modalid")[0].value = id;
+    //window.alert(data);
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 
 </script>

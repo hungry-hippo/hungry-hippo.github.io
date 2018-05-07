@@ -66,8 +66,7 @@ class Comments(db.Model, UserMixin):
         db.session.commit()
 
     def modify_comment(self, newdata):
-        db.session.delete(self)
-        db.session.add(newdata)
+        self.text = newdata
         db.session.commit()
 
 
