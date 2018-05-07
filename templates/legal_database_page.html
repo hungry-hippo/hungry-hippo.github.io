@@ -1,144 +1,198 @@
 <!doctype html>
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modalstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forumstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-grid.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-reboot.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function delid(id)
+        {
+            document.getElementById('id').value = id;
+            document.getElementById('button').click();
+        }
+    </script>
 </head>
 <body>
-<h1> Legal Access </h1>
-<!-- The Modal -->
-<div id="myModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-      <p><h1>Modify Law </h1>
-        <form method="POST">
-            {{ modform.csrf_token }}
-            {{ modform.chapter.label}} {{modform.chapter(class_='modalmodify', size=100)}}
-            <br><br><br>
-            {{ modform.sec.label}} {{modform.sec(class_='modalmodify', size=100)}}
-            <br><br><br>
-            {{ modform.legal.label}} {{modform.legal(class_='modalmodify', size=100)}}
-            <br><br><br>
-            {{ modform.exp.label}} {{modform.exp(class_='modalmodify', size=100)}}
-            <br><br><br>
-            {{ modform.modifyid(class_='modalid')}}
-            {{modform.modify}}
-            {% if modform.errors and modform.modify.data %}
-                {% for field, error in modform.errors.items() %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ error }}
+{% extends 'navbar.html' %}
+{% block body %}
+<div style="padding-top: 70px" class="container">
+    <div class="card mb-5">
+        <div class="card-header display-4 text-center">
+            Legal Database Access
+        </div>
+        <div class="card-header">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="input-group my-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text py-0">{{form.chapno.label}}</span>
                     </div>
-                {% endfor %}
+                    {{ form.chapno(class_="custom-select") }}
+                    <div class="input-group-append">
+                        {{form.submitchap(class_="btn btn-outline-dark py-0")}}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            {% if addform.errors and addform.add.data %}
+            {% for field, error in addform.errors.items() %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
             {% endif %}
 
-        </form>
-    </p>
-  </div>
+            {% if modform.errors and modform.modify.data %}
+            {% for field, error in modform.errors.items() %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+            {% endif %}
 
-</div>
-
-    <form method="POST">
-        {{ form.csrf_token }}
-        {{ form.chapno.label }} {{ form.chapno(maxsize=20) }} {{form.submitchap}}
-        <br>
-        {{ form.secno.label }} {{ form.secno(maxsize=20) }} {{form.submitsec}}
-    </form>
-    <br><br>
-    {% if laws %}
-        <table>
-            <tr>
-                <th>Chapter No</th>
-                <th>Section No</th>
-                <th>Legal Text</th>
-                <th>Explanation</th>
-                <th>Action</th>
-             </tr>
+            {% if laws %}
             {% for law in laws %}
-                <tr>
-                    <td>{{ law.chapter }}</td>
-                    <td>{{ law.sec }} </td>
-                    <td>{{ law.legal }}</td>
-                    <td>{{ law.exp }}</td>
-                    <td>
-                        {# button to modify law #}
-                        <button id=m{{ law.id }} onclick="modalopen('{{law.id}}', '{{ law.chapter }}','{{law.sec}}','{{ law.legal }}',
-                                        '{{ law.exp }}')">Modify</button>
-                        <br><br><br>
-                        {# button to delete law #}
-                        <button id="{{ law.id }}" onclick=delid(id)>Delete</button>
-                    </td>
-                 </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
-    <form method="POST">
-        {{ delform.crsf_token }}
-        {{ delform.id }}
-        <input id=button type="submit" hidden="true">
-    </form>
-
-
-<h2> Add Law </h2>
-    <form method="POST">
-        <br>
-        {{ addform.chapter.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ addform.chapter }}
-        <br><br>
-       {{ addform.sec.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ addform.sec }}
-        <br><br>
-        {{ addform.legal.label }} {{ addform.legal }}
-        <br><br>
-        {{ addform.exp.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ addform.exp }}
-        <br><br>
-        {{ addform.add }}
-
-        {% if addform.errors and addform.add.data %}
-            {% for field, error in addform.errors.items() %}
-                <div class="alert alert-danger" role="alert">
-                        {{ error }}
+            <div class="card text-center rounded-0 my-2 border">
+                <div class="card-header row bg-dark text-light m-0">
+                    <div class="col-4 border-right">
+                        {{ law.sec }}
+                    </div>
+                    <div class="col-8 border-left">
+                        {{ law.chapter }}
+                    </div>
                 </div>
+                <div class="card-body">
+                    <div class="row py-2 border-bottom" style="max-height: 100px; overflow: hidden;">
+                        <div class="col-2 border-right">
+                            Law Statement
+                        </div>
+                        <div class="col border-left text-justify" style="margin-right: -17px;overflow-x:  hidden;overflow-y: scroll;">
+                            {{ law.legal }}
+                        </div>
+                    </div>
+                    <div class="row py-2 border-top" style="max-height: 100px; overflow: hidden;">
+                        <div class="col-2 border-right">
+                            Explanation
+                        </div>
+                        <div class="col border-left text-justify" style="margin-right: -17px;overflow-x:  hidden;overflow-y: scroll;">
+                            {{ law.exp }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer row text-muted">
+                    <div class="col-4 border-right">
+                        Added by {{ law.addedby }}
+                    </div>
+                    <div class="col-4 border-left border-right">
+                    {% if not law.modifiedby=='_' %}
+                        Modified by {{ law.modifiedby }}
+                    {% endif %}
+                    </div>
+                    <div class="col-4 row border-left">
+                        {# button to modify law #}
+                        <button type="button" class="btn btn-outline-info col-5 mr-auto" data-toggle="modal"
+                                data-target="#m{{law.id}}Modal">
+                            Modify
+                        </button>
+                        {# modal to modify law #}
+                        <div class="modal fade" id="m{{law.id}}Modal" tabindex="-1" role="dialog"
+                             aria-labelledby="m{{law.id}}ModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered w-75" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="m{{law.id}}ModalLabel">Modify Law</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST">
+                                            {{ modform.csrf_token }}
+                                            <div class="input-group mb-3 m-0 row">
+                                                <div class="input-group-prepend col-3 px-0">
+                                                    <span class="input-group-text w-100">{{ modform.chapter.label}}</span>
+                                                </div>
+                                                {{modform.chapter(class_='form-control disabled', value=law.chapter)}}
+                                            </div>
+                                            <div class="input-group mb-3 m-0 row">
+                                                <div class="input-group-prepend col-3 px-0">
+                                                    <span class="input-group-text w-100">{{ modform.sec.label}}</span>
+                                                </div>
+                                                {{modform.sec(class_='form-control disabled', value=law.sec)}}
+                                            </div>
+                                            <div class="input-group mb-3 m-0 row">
+                                                <div class="input-group-prepend col-3 px-0">
+                                                    <span class="input-group-text w-100">Legal<br>Statement</span>
+                                                </div>
+
+                                                {{modform.legal(rows=5, class_='form-control', value=law.legal)}}
+                                            </div>
+                                            <div class="input-group mb-3 m-0 row">
+                                                <div class="input-group-prepend col-3 px-0">
+                                                    <span class="input-group-text w-100">{{ modform.exp.label}}</span>
+                                                </div>
+                                                {{modform.exp(rows=5, class_='form-control', value=law.exp)}}
+                                            </div>
+                                            {{ modform.modifyid(value=law.id)}}
+                                            {{modform.modify(class_="btn btn-outline-info")}}
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {# button to delete law #}
+                        <button class="btn btn-outline-danger col-5 ml-auto" onclick=delid(id)>Delete</button>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        {% endif %}
+            {% else %}
+            <h5 class="text-center">Select a Chapter to view related Laws</h5>
+            {% endif %}
+        </div>
+        <div class="card-footer">
+            <p class="display-4">Add Law</p>
+            <form method="POST">
+                {{ addform.csrf_token }}
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-3 px-0">
+                        <span class="input-group-text w-100">{{ addform.chapter.label }}</span>
+                    </div>
+                    {{ addform.chapter(class_="form-control") }}
+                </div>
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-3 px-0">
+                        <span class="input-group-text w-100">{{ addform.sec.label }}</span>
+                    </div>
+                    {{ addform.sec(class_="form-control") }}
+                </div>
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-3 px-0">
+                        <span class="input-group-text w-100">Legal<br>Statement</span>
+                    </div>
+                    {{ addform.legal(rows=5, class_="form-control") }}
+                </div>
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-3 px-0">
+                        <span class="input-group-text w-100">{{ addform.exp.label }}</span>
+                    </div>
+                    {{ addform.exp(rows=5, class_="form-control") }}
+                </div>
+                {{ addform.add(class_="btn btn-outline-info float-right") }}
 
-    </form>
+            </form>
+            {# hidden field to pass delete id #}
+            <form method="POST">
+                {{ delform.crsf_token }}
+                {{ delform.id }}
+                <input id=button type="submit" hidden="true">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 </body>
-
-<script type="text/javascript">
-    function delid(id)
-    {
-        document.getElementById('id').value = id;
-        document.getElementById('button').click();
-    }
-
-    // Get the modal
-var modal = document.getElementById('myModal');
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal
-function modalopen(id, chapter, sec,legal,exp) {
-    modal.style.display = "block";
-    document.getElementsByClassName("modalmodify")[0].value= chapter;
-    document.getElementsByClassName("modalmodify")[1].value = sec;
-    document.getElementsByClassName("modalmodify")[2].value = legal;
-    document.getElementsByClassName("modalmodify")[3].value = exp;
-    document.getElementsByClassName("modalid")[0].value = id;
-    //window.alert(data);
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-</script>

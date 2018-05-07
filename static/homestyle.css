@@ -1,0 +1,38 @@
+body{
+	background: url("../static/images/backg.jpg") no-repeat fixed;
+	background-size: cover;
+}
+
+.carousel-item{
+	overflow: hidden;
+	height: 450px;
+}
+
+.carousel-item img{
+	width: 100%;
+	min-height: max-content;
+}
+
+.container{
+	font-weight: bold;
+}
+
+.modal-backdrop{
+	z-index: 0 !important;
+}
+
+.list-group li a{
+	font-weight: normal;
+	text-decoration: none !important;
+	color: #000000;
+}
+
+.list-group-item:hover{
+	cursor: pointer;
+	background: rgba(255,255,255,0.6) !important;
+	transition: all ease-in-out 0.15s;
+}
+
+.card{
+	background: rgba(255,255,255,0.6) !important;
+}

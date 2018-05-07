@@ -1,148 +1,157 @@
 <!doctype html>
 <head>
-     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modalstyle.css') }}">
-     <style>
-         th {width: 20px;}
-
-
-
-     </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forumstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-grid.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-reboot.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function delid(id)
+        {
+            document.getElementById('id').value = id;
+            document.getElementById('button').click();
+        }
+    </script>
 </head>
 <body>
-<table>
-    <tr>
-        <td>
-        <h1> {{ heading.heading }} </h1>
-        {{ heading. text }}
-        </td>
-    </tr>
-</table>
-
-<br><br>
-
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-      <p><h1>Modify Your Comment </h1>
-        <form method="POST">
-            {{ modform.csrf_token }}
-            {{ modform.modifytext.label}} {{modform.modifytext(class_='modaltext')}}
-            {{ modform.modifyid(class_='modalid')}}
-            {{ modform.commentmod }}
-            {% if modform.errors and modform.commentmod.data %}
-                {% for field, error in modform.errors.items() %}
-                    <div class="alert alert-danger" role="alert">
+{% extends 'navbar.html' %}
+{% block body %}
+<div style="padding-top: 70px" class="container">
+    <div class="card mb-5">
+        <div class="card-header text-center">
+            <div class="card rounded-0">
+                <div class="card-body">
+                    {% if modform.errors and modform.commentmod.data %}
+                    {% for field, error in modform.errors.items() %}
+                    <div class="alert alert-danger w-100 text-center" role="alert">
                         {{ error }}
                     </div>
-                {% endfor %}
-            {% endif %}
-        </form>
-    </p>
-  </div>
+                    {% endfor %}
+                    {% endif %}
+                    <h4 style="font-weight: normal;border-bottom: 1px solid rgba(0,0,0,0.4) !important"
+                        class="card-subtitle mb-2 pb-2">
+                        {{ heading.heading }}
+                    </h4>
+                    <p class="card-text text-left">{{ heading.text }}</p>
+                </div>
+                <div class="card-footer row text-muted" style="text-decoration: none">
+                    <p class="col-4 text-left mb-0">Posted by {{ heading.username }}
+                        {% if heading.usertype==3 %}
+                        <span class="badge badge-danger">Admin</span>
+                        {% elif heading.usertype==2 %}
+                        <span class="badge badge-info">Legal</span>
+                        {% endif %}
+                    </p>
+                    {% if user.usertype==3 or user.username==heading.username %}
+                    <div class="col">
+                        <button class="btn btn-outline-info float-right" type="button"
+                                data-toggle="collapse" data-target="#m{{ heading.id }}"
+                                aria-expanded="false" aria-controls="m{{ heading.id }}">
+                            Modify
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="collapse" id="m{{ heading.id }}">
+                    <div class="card card-body">
+                        <form method="POST">
+                            {{ modform.csrf_token }}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ user.username }}</span>
+                                </div>
+                                {{modform.modifytext(class_='form-control', value=heading.text)}}
+                                <div class="input-group-append">
+                                    {{ modform.commentmod(class_="btn btn-outline-secondary") }}
+                                </div>
+                            </div>
+                            {{ modform.modifyid(value=heading.id)}}
 
-</div>
-
-<table>
-    {% for dat in data %}
-            <tr>
-                <td>
-                    <div style="text-align: right;">
-                        <h2>
-                            {{ dat.text }}
-                        </h2>
-
-                        Posted by {{ dat.username }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% for dat in data %}
+            <div class="card rounded-0 my-3">
+                <div class="card-header row bg-dark text-light">
+                    <div class="col-9">
+                        <p class="card-text">{{ dat.text }}</p>
+                    </div>
+                    <div class="col-3 row justify-content-end">
                         {% if user.usertype==3 or user.username==dat.username %}
-                            <br><br>
-                            {# button to delete comment #}
-                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-
-                            {# button to modify comment #}
-                            <button id=m{{ dat.id }} onclick="modalopen('{{dat.id}}','{{dat.text}}')">Modify</button>
-
+                        {# button to modify comment #}
+                        <button class="mr-3 btn btn-outline-primary" type="button"
+                                data-toggle="collapse" data-target="#m{{ dat.id }}"
+                                aria-expanded="false" aria-controls="{{ dat.id }}">
+                            Modify
+                        </button>{# button to delete comment #}
+                        <button class="btn btn-outline-danger" id={{ dat.id }} onclick=delid(id)>Delete</button>
                         {% endif %}
                     </div>
-                </td>
-            </tr>
+                </div>
+                <div class="collapse" id="m{{ dat.id }}">
+                    <div class="card card-body">
+                        <form method="POST">
+                            {{ modform.csrf_token }}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ user.username }}</span>
+                                </div>
+                                {{modform.modifytext(class_='form-control', value=dat.text)}}
+                                <div class="input-group-append">
+                                    {{ modform.commentmod(class_="btn btn-outline-secondary") }}
+                                </div>
+                            </div>
+                            {{ modform.modifyid(value=dat.id)}}
 
-
-    {% endfor %}
-</table>
-
-{# Comment Box #}
-<form method="POST">
-    {{ form.csrf_token }}
-    <br>
-    {{ user.username }}
-    <br>
-    {{ form.text.label }} {{ form.text(size=167) }}
-    <input type="submit" value="Reply">
-    {% if form.errors %}
-        {% for field, error in form.errors.items() %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
+                        </form>
+                    </div>
+                </div>
+                <a class="card-footer row text-muted" style="text-decoration: none" href="/forum/{{ dat.id }}">
+                    <p class="col text-right mb-0">Posted by {{ dat.username }}
+                        {% if dat.usertype==3 %}
+                        <span class="badge badge-danger">Admin</span>
+                        {% elif dat.usertype==2 %}
+                        <span class="badge badge-info">Legal</span>
+                        {% endif %}
+                    </p>
+                </a>
             </div>
-        {% endfor %}
-    {% endif %}
-</form>
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            {# Comment Box #}
+            {% if user.is_authenticated %}
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">{{ user.username }}</span>
+                    </div>
+                    {{ form.text(class_="form-control", placeholder="Comments") }}
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-dark" type="submit">Reply</button>
+                    </div>
+                </div>
+                {% if form.errors %}
+                {% for field, error in form.errors.items() %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </form>
+            {% endif %}
 
-<form method="POST">
-    {{ delform.id }}
-    <input id=button type="submit" hidden="true">
-</form>
-<br>
-
+            <form method="POST">
+                {{ delform.id }}
+                <input id=button type="submit" hidden="true">
+            </form>
+        </div>
+    </div>
+    {%endblock%}
+</div>
 </body>
-<script type="text/javascript">
-    function delid(id)
-    {
-        document.getElementById('id').value = id;
-        document.getElementById('button').click();
-    }
-
-    function replytofunc(replyid)
-    {   //window.alert(replyid);
-        //document.write(replyid);
-        var i;
-        //var elements = document.getElementsByClassName('repliesto');
-
-        //for(i=0; i<elements.length; i++) {
-        //    elements[i].value = replyid;
-        //}
-
-    }
-// Get the modal
-var modal = document.getElementById('myModal');
-
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal
-function modalopen(id, data) {
-    modal.style.display = "block";
-    document.getElementsByClassName("modaltext")[0].value= data;
-    document.getElementsByClassName("modalid")[0].value = id;
-    //window.alert(data);
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-
-</script>

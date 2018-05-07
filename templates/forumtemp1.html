@@ -1,73 +1,92 @@
 <!doctype html>
 <head>
-     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modalstyle.css') }}">
-     <style>
-         th {width: 20px;}
-     </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forumstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-grid.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-reboot.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function delid(id)
+        {
+            document.getElementById('id').value = id;
+            document.getElementById('button').click();
+        }
+    </script>
 </head>
 <body>
-<h1> Forum </h1>
-<table>
-    {% for dat in data %}
-
-        {% if dat.replyto==0 %}
-            <tr>
-                <td>
-                    <h2>
-                        <a href="/forum1/{{ dat.id }}">{{ dat. heading }}</a>
-                    </h2>
-                    <div style="align: right;">
-                        Posted by {{ dat.username }}
-                        {% if user.usertype==3 or user.username==dat.username %}
-                            {# button to delete user #}
-                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-
-
-                        {% endif %}
-                    </div>
-                </td>
-            </tr>
-        {% endif %}
-
-    {% endfor %}
-</table>
-<br>
--------------------------------------------------------------
-<br><br>
-{# Comment Box #}
-<h2>Ceate New Post</h2>
-<form method="POST">
-    {{ form.csrf_token }}
-    <br>
-    {{ user.username }}
-    <br>
-    {{ form.heading.label }} {{ form.heading(size=150) }}
-    <br><br>
-    {{ form.text.label }} {{ form.text(size=150, cols=152) }}
-    <br><br>
-    <input type="submit" value="Create Post">
-    {% if form.errors %}
-        {% for field, error in form.errors.items() %}
-            <div class="alert alert-danger" role="alert">
+{% extends 'navbar.html' %}
+{% block body %}
+<div style="padding-top: 70px" class="container">
+    <div class="card mb-5">
+        <div class="card-header display-4 text-center">
+            Forum
+        </div>
+        <div class="card-body">
+            {% if form.errors %}
+            {% for field, error in form.errors.items() %}
+            <div class="alert alert-danger w-100 text-center" role="alert">
                 {{ error }}
             </div>
-        {% endfor %}
-    {% endif %}
-</form>
-<br>
+            {% endfor %}
+            {% endif %}
+            {% for dat in data %}
+            {% if dat.replyto==0 %}
 
-{# hidden field to pass delete id #}
-<form method="POST">
-    {{ delform.id }}
-    <input id=button type="submit" hidden="true">
-</form>
+            <div class="card rounded-0 my-3">
+                <div class="card-header row bg-dark text-light">
+                    <h5 style="border: none !important;" class="card-title col-10 pb-3">{{ dat. heading }}</h5>
+                    <div class="col-2 align-self-center">
+                        {% if user.usertype==3 or user.username==dat.username %}
+                        {# button to delete user #}
+                        <button class="btn btn-outline-danger float-right" id={{ dat.id }} onclick = delid(id)>Delete</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <a class="card-footer row text-muted" style="text-decoration: none" href="/forum/{{ dat.id }}">
+                    <h6 class="col text-left mb-0">View Discussions</h6>
+                    <p class="col text-right mb-0">Posted by {{ dat.username }}
+                        {% if dat.usertype==3 %}
+                        <span class="badge badge-danger">Admin</span>
+                        {% elif dat.usertype==2 %}
+                        <span class="badge badge-info">Legal</span>
+                        {% endif %}
+                    </p>
+                </a>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            {% if user.is_authenticated %}
+            <p class="display-4">Create New Post</p>
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ form.heading.label }}</span>
+                    </div>
+                    {{ form.heading(size=10, class_="form-control") }}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">{{ form.text.label }}</span>
+                    </div>
+                    {{ form.text(rows=5, class_="form-control") }}
+                </div>
+                <input class="btn btn-outline-info float-right m-0" type="submit" value="Create Post">
+            </form>
+            {% else %}
+            <p class="display-5">Please Login to Create New Post</p>
+            {% endif %}
+
+            {# hidden field to pass delete id #}
+            <form method="POST">
+                {{ delform.id }}
+                <input id=button type="submit" hidden="true">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 </body>
-
-<script type="text/javascript">
-    function delid(id)
-    {
-        document.getElementById('id').value = id;
-        document.getElementById('button').click();
-    }
-</script>

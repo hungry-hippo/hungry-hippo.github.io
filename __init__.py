@@ -14,16 +14,15 @@ from expecto_judicio.views import *
 #app.add_url_rule('/scc', TrackCases.endpoint, view_func=TrackCases.as_view(TrackCases.endpoint), methods=['GET','POST'])
 app.add_url_rule('/scc/<id>', TrackCaseResult.endpoint, view_func=TrackCaseResult.as_view(TrackCaseResult.endpoint), methods=['GET','POST'])
 app.add_url_rule('/home', HomePage.endpoint, view_func=HomePage.as_view(HomePage.endpoint), methods=['GET','POST'])
-app.add_url_rule('/forum', UserForum.endpoint, view_func=UserForum.as_view(UserForum.endpoint), methods=['GET','POST'])
 app.add_url_rule('/useraccess', ManageUsers.endpoint, view_func=ManageUsers.as_view(ManageUsers.endpoint), methods=['GET','POST'])
 app.add_url_rule('/searchresults/<name>', SearchResults.endpoint, view_func=SearchResults.as_view(SearchResults.endpoint), methods=['GET','POST'])
 app.add_url_rule('/legalpage', LegalDatabaseAccess.endpoint, view_func=LegalDatabaseAccess.as_view(LegalDatabaseAccess.endpoint), methods=['GET','POST'])
 app.add_url_rule('/logout', Logout.endpoint, view_func=Logout.as_view(Logout.endpoint), methods=['GET','POST'])
 
-app.add_url_rule('/forum1', ForumTemp1.endpoint, view_func=ForumTemp1.as_view(ForumTemp1.endpoint), methods=['GET','POST'])
-app.add_url_rule('/forum1/<id>', ForumTemp2.endpoint, view_func=ForumTemp2.as_view(ForumTemp2.endpoint), methods=['GET','POST'])
+app.add_url_rule('/forum', ForumTemp1.endpoint, view_func=ForumTemp1.as_view(ForumTemp1.endpoint), methods=['GET','POST'])
+app.add_url_rule('/forum/<id>', ForumTemp2.endpoint, view_func=ForumTemp2.as_view(ForumTemp2.endpoint), methods=['GET','POST'])
 
-login_manager.login_view =  HomePage.endpoint
+#login_manager.login_view =  HomePage.endpoint
 
 
 @login_manager.user_loader
@@ -37,7 +36,7 @@ def load_user(user_id):
 
 @app.cli.command()
 def create_db():
-    import expecto_judicio.models  # import here because of circular imports
+    import models  # import here because of circular imports
 
     click.echo('Creating all tables in database...')
     db.create_all()
@@ -45,7 +44,7 @@ def create_db():
 
 @app.cli.command()
 def drop_db():
-    import expecto_judicio.models  # import here because of circular imports
+    import models  # import here because of circular imports
 
     click.echo('Dropping all tables in database...')
     db.drop_all()

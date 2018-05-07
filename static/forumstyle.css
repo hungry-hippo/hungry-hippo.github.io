@@ -1,0 +1,39 @@
+@import url("./css/bootstrap.css");
+@import url("./css/bootstrap-grid.css");
+@import url("./css/bootstrap-reboot.css");
+
+body{
+	background: url("../static/images/backg.jpg") no-repeat fixed;
+	background-size: cover;
+}
+
+.card{
+	background: rgba(255,255,255,0.7) !important;
+}
+
+h5{
+	border-bottom: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+.attachment-post-thumbnail{
+	width: 100%;
+	margin: 2rem 0rem;
+}
+
+iframe {
+	width: 100%;
+}
+
+.nav-tabs a{
+	color: #0f0f0f;
+	text-shadow: 0px 0px 1px #000000,1px 1px 5px #ffffff !important;
+}
+
+.btn-outline-info{
+	color: #212657 !important;
+	border-color: #212657 !important;
+}
+.btn-outline-info:hover{
+	color: #ffffff !important;
+	background-color: #212657 !important;
+}

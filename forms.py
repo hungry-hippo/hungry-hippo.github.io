@@ -2,12 +2,12 @@
 from flask_wtf import FlaskForm
 from flask import flash
 
-
 from wtforms import StringField, PasswordField, HiddenField, SelectField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError
 
 from expecto_judicio.models import Laws
 
+from expecto_judicio.application import db
 
 import re
 
@@ -52,7 +52,7 @@ class PostAddForm(FlaskForm):
     text = TextAreaField('Content: ',
                        validators=[DataRequired(), Length(max=8000, message="Comment length must be less than 8000")])
     heading = StringField('Heading: ',
-                       validators=[DataRequired(), Length(max=140, message="Comment length must be less than 8000")])
+                       validators=[DataRequired(), Length(max=500, message="Heading length must be less than 500")])
 
 
 class DeleteForm(FlaskForm):
@@ -69,29 +69,30 @@ class AddUserForm(FlaskForm):
 
 
 class LawsSearchForm(FlaskForm):
-    secno = SelectField('Section No: ', validators=None)
-    chapno = SelectField('Section No: ', validators=None)
-    submitsec = SubmitField('Search')
+    #secno = SelectField('Section No: ', validators=None)
+    chapno = SelectField('Chapter No: ', validators=None)
+    #submitsec = SubmitField('Search')
     submitchap =SubmitField('Search')
 
     def __init__(self, min_entries=0, *args, **kwargs):
         super(LawsSearchForm, self).__init__(*args, **kwargs)
-        self.secno.choices = [(a.sec, a.sec) for a in Laws.query.all()]
-        self.chapno.choices = set([(b.chapter, b.chapter) for b in Laws.query.all()])
+        #self.secno.choices = [(a.sec, a.sec) for a in Laws.query.all()]
+        query = db.session.query(Laws.chapter.distinct().label("chapter"))
+        self.chapno.choices = [(b.chapter, b.chapter) for b in query.all()]
 
 
 class LawsAddForm(FlaskForm):
-    chapter = StringField('Chapter No: ', validators=[DataRequired(), Length(min=1,max=200, message="Chapter length cannot be greater than 200")])
-    sec = StringField('Section No: ', validators=[DataRequired(), Length(min=1,max=200, message="Section length cannot be greater than 200")])
-    legal = StringField('Legal Statement: ', validators=[DataRequired(), Length(min=1,max=200, message="Legal Statement length cannot be greater than 8000")])
-    exp = StringField('Explanation: ', validators=[DataRequired(), Length(min=1,max=200, message="Explanation length cannot be greater than 8000")])
+    chapter = StringField('Chapter No: ', validators=[DataRequired(), Length(max=200, message="Chapter length cannot be greater than 200")])
+    sec = StringField('Section No: ', validators=[DataRequired(), Length(max=200, message="Section length cannot be greater than 200")])
+    legal = TextAreaField('Legal Statement: ', validators=[DataRequired(), Length(max=8000, message="Legal Statement length cannot be greater than 8000")])
+    exp = TextAreaField('Explanation: ', validators=[DataRequired(), Length(max=8000, message="Explanation length cannot be greater than 8000")])
     add = SubmitField('Add')
 
 
 class LawsModifyForm(FlaskForm):
-    chapter = StringField('Chapter No: ', validators=[DataRequired(), Length(min=1,max=200, message="Chapter length cannot be greater than 200")])
-    sec = StringField('Section No: ', validators=[DataRequired(), Length(min=1,max=200, message="Section length cannot be greater than 200")])
-    legal = StringField('Legal Statement: ', validators=[DataRequired(), Length(min=1,max=200, message="Legal Statement length cannot be greater than 8000")])
-    exp = StringField('Explanation: ', validators=[DataRequired(), Length(min=1,max=200, message="Explanation length cannot be greater than 8000")])
+    chapter = StringField('Chapter No: ', validators=[DataRequired(), Length(max=200, message="Chapter length cannot be greater than 200")])
+    sec = StringField('Section No: ', validators=[DataRequired(), Length(max=200, message="Section length cannot be greater than 200")])
+    legal = TextAreaField('Legal Statement: ', validators=[DataRequired(), Length(max=8000, message="Legal Statement length cannot be greater than 8000")])
+    exp = TextAreaField('Explanation: ', validators=[DataRequired(), Length(max=8000, message="Explanation length cannot be greater than 8000")])
     modify = SubmitField('Modify')
     modifyid = HiddenField('ModifyID')

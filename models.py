@@ -34,7 +34,7 @@ class User(db.Model, UserMixin):
         try:
             db.session.commit()
         except exc.IntegrityError as err:
-            print err
+            print(err)
             db.session.rollback()
 
     def delete_user(self):
@@ -68,7 +68,7 @@ class Comments(db.Model, UserMixin):
         try:
             db.session.commit()
         except exc.IntegrityError as err:
-            print err
+            print(err)
             db.session.rollback()
 
     def delete_comment(self):
@@ -103,7 +103,7 @@ class Laws(db.Model):
         try:
             db.session.commit()
         except exc.IntegrityError as err:
-            print err
+            print(err)
             db.session.rollback()
 
     def delete_law(self):

@@ -1,121 +1,183 @@
 <!doctype html>
 <head>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='forumstyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-grid.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-reboot.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function delid(id)
+        {
+            document.getElementById('id').value = id;
+            document.getElementById('button').click();
+        }
+
+    </script>
 </head>
 <body>
-<h1> User Access </h1>
-<h2>End Users</h2>
-{# Table 1 for End Users #}
-<table style="width:100%">
-    <tr>
-        <th>Username</th>
-        <th>Usertype</th>
-        <th>Action</th>
-    </tr>
-        {% for dat in data %}
-            {% if dat.usertype==1%}
-                <tr>
-                    <td>{{ dat.username }}</td>
-                    <td>{{ dat.usertype }}</td>
-                    <td>
-                        {# button to delete user #}
-                        {% if currentuser.id!=dat.id %}
-                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-</table>
-
-<br><br>
-
-<h2>Legal Experts</h2>
-{# Table 2 for Legal Experts #}
-<table style="width:100%">
-    <tr>
-        <th>Username</th>
-        <th>Usertype</th>
-        <th>Action</th>
-    </tr>
-        {% for dat in data %}
-            {% if dat.usertype==2 %}
-                <tr>
-                    <td>{{ dat.username }}</td>
-                    <td>{{ dat.usertype }}</td>
-                    <td>
-                       {# button to delete user #}
-                       {% if currentuser.id!=dat.id %}
-                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-                        {% endif %}
-                    </td>
-                </tr>
-
-            {% endif %}
-        {% endfor %}
-</table>
-
-<br><br>
-
-<h2>System Admins</h2>
-{# Table 3 for System Experts #}
-<table style="width:100%">
-    <tr>
-        <th>Username</th>
-        <th>Usertype</th>
-        <th>Action</th>
-    </tr>
-        {% for dat in data %}
-            {% if dat.usertype==3 %}
-                <tr>
-                    <td>{{ dat.username }}</td>
-                    <td>{{ dat.usertype }}</td>
-                    <td>
-                       {# button to delete user #}
-                       {% if currentuser.id!=dat.id %}
-                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-                        {% endif %}
-                    </td>
-                </tr>
-
-            {% endif %}
-        {% endfor %}
-</table>
-
-
-
-<form method="POST">
-    {{ delform.id }}
-    <input id=button type="submit" hidden="true">
-</form>
-
-<br><br>
-<h2>Add User</h2>
-<form method="POST">
-    {{ form.csrf_token }}
-    {{ form.username.label }} {{ form.username(size=20) }}
-    <br><br>
-    {{ form.password.label }}  {{ form.password(size=20) }}
-    <br><br>
-    {{ form.usertype.label }} {{ form.usertype(maxsize=20) }}
-    <br><br>
-    {{ form.adduser }}
-    {% if form.errors and form.adduser.data %}
-        {% for field, error in form.errors.items() %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
+{% extends 'navbar.html' %}
+{% block body %}
+<div style="padding-top: 70px" class="container">
+    <div class="card mb-5">
+        <div class="card-header display-4 text-center">
+            User Access
+        </div>
+        <div class="card-body">
+            {% if form.errors and form.adduser.data %}
+                {% for field, error in form.errors.items() %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% endif %}
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                       href="#endusers" role="tab" aria-controls="nav-home" aria-selected="true">End Users</a>
+                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                       href="#legalexperts" role="tab" aria-controls="nav-profile" aria-selected="false">Legal Experts</a>
+                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab"
+                       href="#systemadmins" role="tab" aria-controls="nav-contact" aria-selected="false">System Admins</a>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="endusers" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <div class="card rounded-0 my-3">
+                        <div class="card-header">
+                            End Users
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Usertype</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for dat in data %}
+                                {% if dat.usertype==1%}
+                                <tr>
+                                    <th scope="row">{{ dat.username }}</th>
+                                    <td>{{ dat.usertype }}</td>
+                                    <td>
+                                        {# button to delete user #}
+                                        {% if user.id!=dat.id %}
+                                        <button id={{ dat.id }} onclick=delid(id) class="btn-outline-danger">Delete</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="legalexperts" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <div class="card rounded-0 my-3">
+                        <div class="card-header">
+                            Legal Experts
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Usertype</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for dat in data %}
+                                {% if dat.usertype==2%}
+                                <tr>
+                                    <th scope="row">{{ dat.username }}</th>
+                                    <td>{{ dat.usertype }}</td>
+                                    <td>
+                                        {# button to delete user #}
+                                        {% if user.id!=dat.id %}
+                                        <button id={{ dat.id }} onclick=delid(id) class="btn-outline-danger">Delete</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="systemadmins" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    <div class="card rounded-0 my-3">
+                        <div class="card-header">
+                            System Admins
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Usertype</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for dat in data %}
+                                {% if dat.usertype==3%}
+                                <tr>
+                                    <th scope="row">{{ dat.username }}</th>
+                                    <td>{{ dat.usertype }}</td>
+                                    <td>
+                                        {# button to delete user #}
+                                        {% if user.id!=dat.id %}
+                                        <button id={{ dat.id }} onclick=delid(id) class="btn-outline-danger">Delete</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% endfor %}
-    {% endif %}
-</form>
+        </div>
+        <div class="card-footer">
+            <p class="display-4">Add User</p>
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-2 px-0">
+                        <span class="input-group-text w-100">{{ form.username.label }}</span>
+                    </div>
+                    {{ form.username(class_="form-control") }}
+                </div>
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-2 px-0">
+                        <span class="input-group-text w-100">{{ form.password.label }}</span>
+                    </div>
+                    {{ form.password(class_="form-control") }}
+                </div>
+                <div class="input-group mb-3 m-0 row">
+                    <div class="input-group-prepend col-2 px-0">
+                        <span class="input-group-text w-100 py-0">{{ form.usertype.label }}</span>
+                    </div>
+                    {{ form.usertype(class_="form-control") }}
+                </div>
+                {{ form.adduser(class_="btn btn-outline-info float-right") }}
 
+            </form>
+            {# hidden field to pass delete id #}
+            <form method="POST">
+                {{ delform.id }}
+                <input id=button type="submit" hidden="true">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
 </body>
-
-<script type="text/javascript">
-    function delid(id)
-    {
-        document.getElementById('id').value = id;
-        document.getElementById('button').click();
-    }
-
-</script>
