@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 
 from werkzeug.exceptions import Forbidden
 
-
+#function called for system-admin access
 def system_admin_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -20,7 +20,7 @@ def system_admin_required(func):
             return login_required(func)(*args, **kwargs)
     return decorated_view
 
-
+#function called for legal-expert access
 def legal_expert_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):

@@ -8,16 +8,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script language="JavaScript">
 
+        setTimeout(function() {
+            $('#signsuccess').fadeOut('slow');
+        }, 2000);
+
         function showInput() {
             var keywords=document.getElementById("user_input").value;
-            var pat = /^([a-z0-9]+\s*)+$/i;
-            var word = pat.exec(keywords);
-            if (!word) {
-                alert("Search String Invalid");
-            }
-            else {
-                window.location.href = '/searchresults/' + keywords;
-            }
+            window.location.href = '/searchresults/'+ keywords
         }
 
         function strip(myString){
@@ -61,11 +58,11 @@
                             {% if loginform.errors and loginform.submit1.data %}
                             {% with messages = get_flashed_messages() %}
                             {% if messages %}
-                            <ul class=flashes>
-                                {% for message in messages %}
-                                <li>{{ message }}</li>
-                                {% endfor %}
-                            </ul>
+                            {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
                             {% endif %}
                             {% endwith %}
                             {% endif %}
@@ -104,14 +101,14 @@
                         </div>
 
                         <div>
-                            {% if signform.errors and signform.submit2.data %}
+                            {% if signform.submit2.data %}
                             {% with messages = get_flashed_messages() %}
                             {% if messages %}
-                            <ul class=flashes>
-                                {% for message in messages %}
-                                <li>{{ message }}</li>
-                                {% endfor %}
-                            </ul>
+                            {% for message in messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
                             {% endif %}
                             {% endwith %}
                             {% endif %}
@@ -126,6 +123,20 @@
 </li>
 {% endblock %}
 {% block body %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message=="Sign Up Successful" %}
+                <div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
 <div id="myCarousel" class="carousel slide w-100 m-0" data-ride="carousel">
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -133,6 +144,7 @@
         <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner">
+
         <div class="carousel-item active">
             <img class="first-slide" src="{{ url_for('static', filename='./images/homecar1.jpg') }}" alt="First slide">
             <div class="container">
@@ -170,6 +182,8 @@
         <span class="sr-only">Next</span>
     </a>
 </div>
+
+
 <div class="container">
     <div class="card-deck my-5">
         <div class="card">

@@ -18,9 +18,8 @@ app.add_url_rule('/useraccess', ManageUsers.endpoint, view_func=ManageUsers.as_v
 app.add_url_rule('/searchresults/<name>', SearchResults.endpoint, view_func=SearchResults.as_view(SearchResults.endpoint), methods=['GET','POST'])
 app.add_url_rule('/legalpage', LegalDatabaseAccess.endpoint, view_func=LegalDatabaseAccess.as_view(LegalDatabaseAccess.endpoint), methods=['GET','POST'])
 app.add_url_rule('/logout', Logout.endpoint, view_func=Logout.as_view(Logout.endpoint), methods=['GET','POST'])
-
-app.add_url_rule('/forum', ForumTemp1.endpoint, view_func=ForumTemp1.as_view(ForumTemp1.endpoint), methods=['GET','POST'])
-app.add_url_rule('/forum/<id>', ForumTemp2.endpoint, view_func=ForumTemp2.as_view(ForumTemp2.endpoint), methods=['GET','POST'])
+app.add_url_rule('/forum', Forum1.endpoint, view_func=Forum1.as_view(Forum1.endpoint), methods=['GET','POST'])
+app.add_url_rule('/forum/<id>', Forum2.endpoint, view_func=Forum2.as_view(Forum2.endpoint), methods=['GET','POST'])
 
 #login_manager.login_view =  HomePage.endpoint
 

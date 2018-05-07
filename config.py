@@ -1,4 +1,5 @@
 # encoding=utf-8
+# setting the required parameters for accessing the database
 _database_settings = {
     'host': 'localhost',
     'port': '3306',

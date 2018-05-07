@@ -25,8 +25,8 @@
         <div class="card-body">
             {% if form.errors %}
             {% for field, error in form.errors.items() %}
-            <div class="alert alert-danger w-100 text-center" role="alert">
-                {{ error }}
+            <div class="alert alert-danger w-100r" role="alert">
+                {{ error[0] }}
             </div>
             {% endfor %}
             {% endif %}

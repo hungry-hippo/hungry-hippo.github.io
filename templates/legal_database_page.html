@@ -20,7 +20,7 @@
 <div style="padding-top: 70px" class="container">
     <div class="card mb-5">
         <div class="card-header display-4 text-center">
-            Legal Database Access
+            Legal Access
         </div>
         <div class="card-header">
             <form method="POST">
@@ -40,7 +40,7 @@
             {% if addform.errors and addform.add.data %}
             {% for field, error in addform.errors.items() %}
             <div class="alert alert-danger" role="alert">
-                {{ error }}
+                {{ error[0] }}
             </div>
             {% endfor %}
             {% endif %}
@@ -48,7 +48,7 @@
             {% if modform.errors and modform.modify.data %}
             {% for field, error in modform.errors.items() %}
             <div class="alert alert-danger" role="alert">
-                {{ error }}
+                {{ error[0] }}
             </div>
             {% endfor %}
             {% endif %}
@@ -127,7 +127,6 @@
                                                 <div class="input-group-prepend col-3 px-0">
                                                     <span class="input-group-text w-100">Legal<br>Statement</span>
                                                 </div>
-
                                                 {{modform.legal(rows=5, class_='form-control', value=law.legal)}}
                                             </div>
                                             <div class="input-group mb-3 m-0 row">

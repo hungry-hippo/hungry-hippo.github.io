@@ -25,7 +25,7 @@
                     {% if modform.errors and modform.commentmod.data %}
                     {% for field, error in modform.errors.items() %}
                     <div class="alert alert-danger w-100 text-center" role="alert">
-                        {{ error }}
+                        {{ error[0] }}
                     </div>
                     {% endfor %}
                     {% endif %}
@@ -43,7 +43,7 @@
                         <span class="badge badge-info">Legal</span>
                         {% endif %}
                     </p>
-                    {% if user.usertype==3 or user.username==heading.username %}
+                    {% if user.username==heading.username %}
                     <div class="col">
                         <button class="btn btn-outline-info float-right" type="button"
                                 data-toggle="collapse" data-target="#m{{ heading.id }}"
@@ -81,14 +81,22 @@
                         <p class="card-text">{{ dat.text }}</p>
                     </div>
                     <div class="col-3 row justify-content-end">
-                        {% if user.usertype==3 or user.username==dat.username %}
+                        {% if user.username==dat.username %}
                         {# button to modify comment #}
-                        <button class="mr-3 btn btn-outline-primary" type="button"
-                                data-toggle="collapse" data-target="#m{{ dat.id }}"
-                                aria-expanded="false" aria-controls="{{ dat.id }}">
+                        <span>
+                            <button class="mr-3 btn btn-outline-primary" type="button"
+                                    data-toggle="collapse" data-target="#m{{ dat.id }}"
+                                    aria-expanded="false" aria-controls="{{ dat.id }}">
                             Modify
-                        </button>{# button to delete comment #}
-                        <button class="btn btn-outline-danger" id={{ dat.id }} onclick=delid(id)>Delete</button>
+                            </button>
+                        </span>
+                        {% endif %}
+
+                        {% if user.usertype==3 or user.username==dat.username %}
+                        {# button to delete comment #}
+                        <span>
+                            <button class="btn btn-outline-danger" id={{ dat.id }} onclick=delid(id)>Delete</button>
+                        </span>
                         {% endif %}
                     </div>
                 </div>
@@ -139,7 +147,7 @@
                 {% if form.errors %}
                 {% for field, error in form.errors.items() %}
                 <div class="alert alert-danger" role="alert">
-                    {{ error }}
+                    {{ error[0] }}
                 </div>
                 {% endfor %}
                 {% endif %}
