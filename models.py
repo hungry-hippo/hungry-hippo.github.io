@@ -72,16 +72,21 @@ class Comments(db.Model, UserMixin):
 
 class Laws(db.Model):
     __tablename__='laws'
-    chapter=db.Column('Chapter No',db.VARCHAR)
-    sec=db.Column('Section No.',db.VARCHAR,primary_key=True)
-    legal=db.Column('Legal Statement as mentioned in the IPC',db.VARCHAR)
-    exp=db.Column('Explaination/Illustration of the Legal Statement',db.VARCHAR)
+    id = db.Column('id', db.Integer, primary_key=True)
+    chapter=db.Column('Chapter',db.String(200))
+    sec=db.Column('Section',db.String(200))
+    legal=db.Column('Legal Statement',db.String(8000))
+    exp=db.Column('Explanation',db.String(8000))
+    addedby = db.Column('Added By', db.String(80))
+    modifiedby = db.Column('Modified By', db.String(80))
 
-    def __init__(self, chapter, sec, legal, exp):
+    def __init__(self, chapter, sec, legal, exp, addedby):
         self.chapter = chapter
         self.sec = sec
         self.legal = legal
         self.exp = exp
+        self.addedby = addedby
+        self.modifiedby = '-'
 
     def add_law(self):
         db.session.add(self)
@@ -91,7 +96,10 @@ class Laws(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def modify_law(self, newdata):
-        db.session.delete(self)
-        db.session.add(newdata)
+    def modify_law(self, chapter,sec,legal,exp,user):
+        self.chapter = chapter
+        self.sec = sec
+        self.legal = legal
+        self.exp = exp
+        self.modifiedby = user
         db.session.commit()

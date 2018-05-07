@@ -6,11 +6,13 @@ from expecto_judicio.application import db, login_manager
 
 app = create_app()
 
+from expecto_judicio.config import SQLALCHEMY_TRACK_MODIFICATIONS
 from expecto_judicio.models import User
 from expecto_judicio.views import *
 
 # No methods specified, so only available as GET
-app.add_url_rule('/root', SamplePageRoot.endpoint, view_func=SamplePageRoot.as_view(SamplePageRoot.endpoint), methods=['GET','POST'])
+app.add_url_rule('/scc', SamplePageRoot.endpoint, view_func=SamplePageRoot.as_view(SamplePageRoot.endpoint), methods=['GET','POST'])
+app.add_url_rule('/scc/<id>', PageCaseResult.endpoint, view_func=PageCaseResult.as_view(PageCaseResult.endpoint), methods=['GET','POST'])
 app.add_url_rule('/login', SamplePageA.endpoint, view_func=SamplePageA.as_view(SamplePageA.endpoint), methods=['GET','POST'])
 app.add_url_rule('/forum', SamplePageB.endpoint, view_func=SamplePageB.as_view(SamplePageB.endpoint), methods=['GET','POST'])
 app.add_url_rule('/useraccess', SamplePageC.endpoint, view_func=SamplePageC.as_view(SamplePageC.endpoint), methods=['GET','POST'])

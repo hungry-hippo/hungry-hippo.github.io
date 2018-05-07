@@ -22,7 +22,14 @@
             {{ modform.csrf_token }}
             {{ modform.modifytext.label}} {{modform.modifytext(class_='modaltext')}}
             {{ modform.modifyid(class_='modalid')}}
-            <input type="submit" id="modify" value="Modify">
+            {{ modform.commentmod }}
+            {% if modform.errors and modform.commentmod.data %}
+                {% for field, error in modform.errors.items() %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         </form>
     </p>
   </div>
@@ -117,6 +124,13 @@
     {{ form.text.label }} {{ form.text(size=167) }}
     {{ form.repliesto(class_='repliesto') }}
     <input type="submit" id='0' onclick=replytofunc(id) value="Reply">
+    {% if form.errors %}
+        {% for field, error in form.errors.items() %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
 </form>
 <br>
 

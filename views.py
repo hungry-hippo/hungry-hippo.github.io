@@ -1,5 +1,5 @@
 # encoding=utf-8
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 from flask.views import View
 
 from flask_login import login_required, login_user, logout_user, current_user
@@ -14,12 +14,33 @@ from sqlalc import Example
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 
+import feedparser
+feedparser._HTMLSanitizer.acceptable_elements.update(['iframe'])
+
 
 class SamplePageRoot(View):
     endpoint = 'sample_page_root'
 
     def dispatch_request(self):
-        return 'Root Page'
+        feeddata=feedparser.parse('http://www.livelaw.in/news-updates/feed/')
+        return render_template('tracksupremecourt.html', feeddata=feeddata, id=id)
+
+
+class PageCaseResult(View):
+    endpoint = 'page_case_result'
+
+    def dispatch_request(self, id):
+        print id
+        feeddata=feedparser.parse('http://www.livelaw.in/news-updates/feed/')
+        for data in feeddata.entries:
+            numericid = ''.join(c for c in data.id if c.isdigit())
+            print data.id
+            print numericid
+            print id
+            if numericid == id:
+                return render_template('tracksupremecourtresult.html', feeddata=data)
+
+        return '<h2>No Results Found</h2>'
 
 
 class SamplePageA(View):
@@ -27,22 +48,34 @@ class SamplePageA(View):
 
     def dispatch_request(self):
         form = LoginForm()
-        signupform = LoginForm()
-        #print '1'
+        signupform = SignUpForm()
+        incorrect = ''
         if form.validate_on_submit():
             user = User.query.filter_by(username=form.username.data).first()
             if user:
                 auth = user.validate_password(form.password.data)
                 if auth:
                     login_user(user)
+
                     return redirect(url_for('sample_page_b'))
                 else:
-                    return redirect(url_for('sample_page_root'))
+                    flash('Incorrect username or password')
+            else:
+                flash('Username does not exist')
+
+               #return render_template('form.html', form=form, signform=signupform, user=current_user, incorrect=incorrect)
+        else:
+            flash_errors(form)
+
         if signupform.validate_on_submit():
-            newuser = User(signupform.username.data,signupform.password.data, 1)
+            newuser = User(signupform.usernameS.data,signupform.passwordS.data, 1)
             newuser.add_user()
-        #print '3'
-        return render_template('form.html', form=form, signform=signupform, user=current_user)
+            return redirect(url_for('sample_page_a'))
+        else:
+        #       #print 1
+            flash_errors(signupform)
+
+        return render_template('form.html', form=form, signform=signupform, user=current_user, incorrect=incorrect)
 
         #return 'Everyone can view this page'
 
@@ -52,35 +85,28 @@ class SamplePageB(View):
     decorators = [login_required]
 
     def dispatch_request(self):
-        data = Comments.query.all()
+        data= Comments.query.all()
         form = CommentForm()
         delform = DeleteForm()
         modifyform = CommentModifyForm()
-        #print modifyform.modifytext.data
-        #print modifyform.validate_on_submit()
-        #print form.validate_on_submit()
         if form.validate_on_submit():
             #print 'y'
-            print form.repliesto.data
+            #print form.repliesto.data
             comment = Comments(current_user.username, form.text.data, current_user.usertype, form.repliesto.data)
-            print comment.text
+            #print comment.text
             comment.add_comment()
             return redirect(url_for('sample_page_b'))
 
         if modifyform.validate_on_submit():
             data = Comments.query.filter_by(id=modifyform.modifyid.data).first()
             data.modify_comment(modifyform.modifytext.data)
-            #print modifyform.modifytext.data
-            #print modifyform.modifyid.data
             return redirect(url_for('sample_page_b'))
 
         if delform.id.data:
             deluser = Comments.query.filter_by(id=delform.id.data).first()
-            #print deluser
             deluser.delete_comment()
             replies = Comments.query.filter_by(replyto=delform.id.data).all()
             for reply in replies:
-                #print reply
                 reply.delete_comment()
             return redirect(url_for('sample_page_b'))
         return render_template('forum.html', form=form, delform=delform, modform=modifyform, data=data, user=current_user)
@@ -107,7 +133,7 @@ class SamplePageC(View):
             return redirect(url_for('sample_page_c'))
         return render_template('manage_users.html', delform=delform, form=form, data=data, currentuser=current_user)
 
-#??
+#Search Results
 class SamplePageD(View):
     endpoint = 'sample_page_d'
     #decorators = [login_required, legal_expert_required]
@@ -151,6 +177,7 @@ class SamplePageE(View):
         form = LawsSearchForm()
         delform = DeleteForm()
         addform = LawsAddForm()
+        modform = LawsModifyForm()
         laws=None
         if form.validate_on_submit():
             if form.submitchap.data:
@@ -161,15 +188,22 @@ class SamplePageE(View):
         #print delform.id.data
         if delform.id.data:
             #print 1
-            deluser = Laws.query.filter_by(sec=delform.id.data).first()
+            deluser = Laws.query.filter_by(id=delform.id.data).first()
             deluser.delete_law()
             #print deluser
             redirect(url_for('sample_page_e'))
+
         if addform.add.data:
-            newlaw = Laws(addform.chapter.data, addform.sec.data, addform.legal.data, addform.exp.data)
+            newlaw = Laws(addform.chapter.data, addform.sec.data, addform.legal.data, addform.exp.data, current_user.username)
             newlaw.add_law()
             return redirect(url_for('sample_page_e'))
-        return render_template('legal_database_page.html', form=form, laws=laws, delform=delform, addform=addform)
+
+        if modform.modify.data:
+            id = modform.modifyid.data
+            modified = Laws.query.filter_by(id=id).first()
+            modified.modify_law(modform.chapter.data,modform.sec.data,modform.legal.data,modform.exp.data,current_user.username)
+
+        return render_template('legal_database_page.html', form=form, laws=laws, delform=delform, addform=addform, modform=modform)
 
 
 class Logout(View):

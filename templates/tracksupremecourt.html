@@ -1,0 +1,16 @@
+<h1> Recent Cases </h1>
+{% for entry in feeddata.entries %}
+    <ul type="disc">
+        <h3><a onclick="window.location='/scc/' + strip('{{ entry.id }}')" href="#" >{{ entry.title }}</a></h3>
+    </ul>
+
+{% endfor %}
+
+<script>
+    function strip(myString){
+        window.alert(myString);
+        return myString.replace(/\D/g,'');
+
+    }
+
+</script>
