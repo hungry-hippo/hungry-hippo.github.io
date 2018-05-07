@@ -1,0 +1,73 @@
+<!doctype html>
+<head>
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modalstyle.css') }}">
+     <style>
+         th {width: 20px;}
+     </style>
+</head>
+<body>
+<h1> Forum </h1>
+<table>
+    {% for dat in data %}
+
+        {% if dat.replyto==0 %}
+            <tr>
+                <td>
+                    <h2>
+                        <a href="/forum1/{{ dat.id }}">{{ dat. heading }}</a>
+                    </h2>
+                    <div style="align: right;">
+                        Posted by {{ dat.username }}
+                        {% if user.usertype==3 or user.username==dat.username %}
+                            {# button to delete user #}
+                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
+
+
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+
+    {% endfor %}
+</table>
+<br>
+-------------------------------------------------------------
+<br><br>
+{# Comment Box #}
+<h2>Ceate New Post</h2>
+<form method="POST">
+    {{ form.csrf_token }}
+    <br>
+    {{ user.username }}
+    <br>
+    {{ form.heading.label }} {{ form.heading(size=150) }}
+    <br><br>
+    {{ form.text.label }} {{ form.text(size=150, cols=152) }}
+    <br><br>
+    <input type="submit" value="Create Post">
+    {% if form.errors %}
+        {% for field, error in form.errors.items() %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</form>
+<br>
+
+{# hidden field to pass delete id #}
+<form method="POST">
+    {{ delform.id }}
+    <input id=button type="submit" hidden="true">
+</form>
+</body>
+
+<script type="text/javascript">
+    function delid(id)
+    {
+        document.getElementById('id').value = id;
+        document.getElementById('button').click();
+    }
+</script>

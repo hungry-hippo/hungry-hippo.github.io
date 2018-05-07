@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from flask import flash
 
 
-from wtforms import StringField, PasswordField, HiddenField, SelectField, SubmitField
+from wtforms import StringField, PasswordField, HiddenField, SelectField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError
 
 from expecto_judicio.models import Laws
@@ -42,11 +42,17 @@ class CommentForm(FlaskForm):
     repliesto = HiddenField('Reply')
 
 
-
 class CommentModifyForm(FlaskForm):
     modifytext = StringField('Comment: ', validators=[DataRequired(), Length(max=8000, message="Comment length must be less than 8000")])
     modifyid = HiddenField('Reply')
     commentmod = SubmitField('Modify')
+
+
+class PostAddForm(FlaskForm):
+    text = TextAreaField('Content: ',
+                       validators=[DataRequired(), Length(max=8000, message="Comment length must be less than 8000")])
+    heading = StringField('Heading: ',
+                       validators=[DataRequired(), Length(max=140, message="Comment length must be less than 8000")])
 
 
 class DeleteForm(FlaskForm):
@@ -80,6 +86,7 @@ class LawsAddForm(FlaskForm):
     legal = StringField('Legal Statement: ', validators=[DataRequired(), Length(min=1,max=200, message="Legal Statement length cannot be greater than 8000")])
     exp = StringField('Explanation: ', validators=[DataRequired(), Length(min=1,max=200, message="Explanation length cannot be greater than 8000")])
     add = SubmitField('Add')
+
 
 class LawsModifyForm(FlaskForm):
     chapter = StringField('Chapter No: ', validators=[DataRequired(), Length(min=1,max=200, message="Chapter length cannot be greater than 200")])

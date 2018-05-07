@@ -21,17 +21,23 @@
                     {{ form.password.label }} {{ form.password(size=20) }}
                     {{ form.submit1}}
                     {% if form.errors and form.submit1.data %}
-                        {% for field, error in form.errors.items() %}
-                            <div class="alert alert-danger" role="alert">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class=flashes>
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
                     {% endif %}
                     {% if incorrect!='' %}
                         <p style='color:red;'>
                             {{ incorrect }}
                         </p>
                     {% endif %}
+
+
                 </form>
             {% endblock %}
 
@@ -44,11 +50,15 @@
                     {{ signform.passwordS.label }} {{ signform.passwordS(size=20) }}
                     {{ signform.submit2}}
                     {% if signform.errors and signform.submit2.data %}
-                        {% for field, error in signform.errors.items() %}
-                            <div class="alert alert-danger" role="alert">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class=flashes>
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
                     {% endif %}
 
                 </form>
@@ -56,28 +66,42 @@
         {% endif %}
     {% endblock %}
 
-    {% block search %}
+
         <form>
             <div id="heading" >
                 <br><br><br><br>
                 <b>Find answers to all legal queries!!</b>
             </div>
 	        <br><br><br><br><br>
-            <input type="text" name="message" id="user_input">
+            <input type="text" name="message" id='user_input' value="">
         </form>
         <br>
         <div id="enter">
             <input class="button" type="submit" onclick="showInput();" value="Search"><br/>
         </div>
-    {% endblock %}
+
 {% endblock %}
+
+<br>
+<h1> Recent Cases </h1>
+{% for entry in feeddata.entries %}
+    <ul type="disc">
+        <h3><a onclick="window.location='/scc/' + strip('{{ entry.id }}')" href="#" >{{ entry.title }}</a></h3>
+    </ul>
+
+{% endfor %}
 
 </body>
 <script language="JavaScript">
     function showInput() {
         var bad=document.getElementById("user_input").value;
-		window.location.href = 'http://localhost:5000/'+ bad
+		window.location.href = 'http://localhost:5000/searchresults/'+ bad
 
     }
 
+    function strip(myString){
+        //window.alert(myString);
+        return myString.replace(/\D/g,'');
+
+    }
   </script>
