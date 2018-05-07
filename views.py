@@ -38,7 +38,7 @@ class TrackCaseResult(View):
             if numericid == id:
                 return render_template('tracksupremecourtresult.html', feeddata=data, user=current_user)
 
-        return '<h2>No Results Found</h2>'
+        return render_template('forbidden.html', msg="No data found", user=current_user)
 
 # class used to handle the home page of the site
 class HomePage(View):
@@ -289,3 +289,17 @@ class Forum2(View):
             return redirect(url_for('forum_temp2', id=id))
         return render_template('forumtemp2.html', form=form, delform=delform, modform=modifyform, heading=heading, data=data,
                                loginform=loginform, user=current_user, postid=id)
+
+
+class WrongUrl(View):
+    endpoint='wrong_url'
+
+    def dispatch_request(self, var):
+        return render_template('forbidden.html', msg='Oops you have navigated somewhere you should not be', user=current_user)
+
+
+class RootPage(View):
+    endpoint='root_page'
+
+    def dispatch_request(self):
+        return redirect(url_for('home_page'))

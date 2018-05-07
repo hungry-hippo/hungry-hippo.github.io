@@ -20,6 +20,8 @@ app.add_url_rule('/legalpage', LegalDatabaseAccess.endpoint, view_func=LegalData
 app.add_url_rule('/logout', Logout.endpoint, view_func=Logout.as_view(Logout.endpoint), methods=['GET','POST'])
 app.add_url_rule('/forum', Forum1.endpoint, view_func=Forum1.as_view(Forum1.endpoint), methods=['GET','POST'])
 app.add_url_rule('/forum/<id>', Forum2.endpoint, view_func=Forum2.as_view(Forum2.endpoint), methods=['GET','POST'])
+app.add_url_rule('/', RootPage.endpoint, view_func=RootPage.as_view(RootPage.endpoint), methods=['GET','POST'])
+app.add_url_rule('/<var>', WrongUrl.endpoint, view_func=WrongUrl.as_view(WrongUrl.endpoint), methods=['GET','POST'])
 
 #login_manager.login_view =  HomePage.endpoint
 
