@@ -1,0 +1,114 @@
+<!doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
+</head>
+<body>
+<h1> User Access </h1>
+<h2>End Users</h2>
+{# Table 1 for End Users #}
+<table style="width:100%">
+    <tr>
+        <th>Username</th>
+        <th>Usertype</th>
+        <th>Action</th>
+    </tr>
+        {% for dat in data %}
+            {% if dat.usertype==1%}
+                <tr>
+                    <td>{{ dat.username }}</td>
+                    <td>{{ dat.usertype }}</td>
+                    <td>
+                        {# button to delete user #}
+                        {% if currentuser.id!=dat.id %}
+                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+</table>
+
+<br><br>
+
+<h2>Legal Experts</h2>
+{# Table 2 for Legal Experts #}
+<table style="width:100%">
+    <tr>
+        <th>Username</th>
+        <th>Usertype</th>
+        <th>Action</th>
+    </tr>
+        {% for dat in data %}
+            {% if dat.usertype==2 %}
+                <tr>
+                    <td>{{ dat.username }}</td>
+                    <td>{{ dat.usertype }}</td>
+                    <td>
+                       {# button to delete user #}
+                       {% if currentuser.id!=dat.id %}
+                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
+                        {% endif %}
+                    </td>
+                </tr>
+
+            {% endif %}
+        {% endfor %}
+</table>
+
+<br><br>
+
+<h2>System Admins</h2>
+{# Table 3 for System Experts #}
+<table style="width:100%">
+    <tr>
+        <th>Username</th>
+        <th>Usertype</th>
+        <th>Action</th>
+    </tr>
+        {% for dat in data %}
+            {% if dat.usertype==3 %}
+                <tr>
+                    <td>{{ dat.username }}</td>
+                    <td>{{ dat.usertype }}</td>
+                    <td>
+                       {# button to delete user #}
+                       {% if currentuser.id!=dat.id %}
+                            <button id={{ dat.id }} onclick=delid(id)>Delete</button>
+                        {% endif %}
+                    </td>
+                </tr>
+
+            {% endif %}
+        {% endfor %}
+</table>
+
+
+
+<form method="POST">
+    {{ delform.id }}
+    <input id=button type="submit" hidden="true">
+</form>
+
+<br><br>
+<h2>Add User</h2>
+<form method="POST">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username(size=20) }}
+    <br><br>
+    {{ form.password.label }}  {{ form.password(size=20) }}
+    <br><br>
+    {{ form.usertype.label }} {{ form.usertype(maxsize=20) }}
+    <br><br>
+    <input type="submit" value="Add">
+</form>
+
+</body>
+
+<script type="text/javascript">
+    function delid(id)
+    {
+        document.getElementById('id').value = id;
+        document.getElementById('button').click();
+    }
+
+</script>

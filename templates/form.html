@@ -1,0 +1,49 @@
+<!doctype html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<h1> Main Page</h1>
+{% if user.is_authenticated %}
+    <h2> Hi {{ user.username }}</h2>
+    <form method="POST" action={{ url_for('logout') }}>
+        <input type="submit" value="Logout">
+    </form>
+{% else %}
+    <h2>Login</h2>
+    <form method="POST">
+    {{ form.csrf_token }}
+    {{ form.username.label }} {{ form.username(size=20) }}
+    {{ form.password.label }} {{ form.password(size=20) }}
+    <input type="submit" value="Login">
+</form>
+    <h2>Sign Up</h2>
+    <form method="POST">
+    {{ signform.csrf_token }}
+    {{ signform.username.label }} {{ signform.username(size=20) }}
+    {{ signform.password.label }} {{ signform.password(size=20) }}
+    <input type="submit" value="SignUp">
+</form>
+{% endif %}
+
+<form>
+    <div id="heading" >
+        <br><br><br><br>
+        <b>Find answers to all legal queries!!</b>
+    </div>
+	<br><br><br><br><br>
+    <input type="text" name="message" id="user_input">
+</form>
+<br>
+<div id="enter">
+    <input class="button" type="submit" onclick="showInput();" value="Search"><br/>
+</div>
+
+</body>
+<script language="JavaScript">
+    function showInput() {
+        var bad=document.getElementById("user_input").value;
+		window.location.href = 'http://localhost:5000/'+ bad
+
+    }
+  </script>

@@ -1,0 +1,13 @@
+<html>
+<head><link rel="stylesheet" type="text/css" href="style.css"></head>
+
+<body>
+<div id="one">Laws relevant to your query:-</div>
+<ul>
+{% for item in name%}
+<li> {{item[0]}} ### {{item[1]}} </li><br>
+{% endfor %}
+
+</ul>
+</body>
+</html>

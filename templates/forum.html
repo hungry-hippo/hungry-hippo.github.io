@@ -1,0 +1,74 @@
+<!doctype html>
+<head>
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
+     <style>
+         th {width: 20px;}
+         td {text-align: right;}
+     </style>
+</head>
+<body>
+<h1> Forum </h1>
+{% for dat in data %}
+    <table style="width:100%">
+        <tr>
+            <th>Username</th>
+            <td>{{ dat.username }} </td>
+        </tr>
+        <tr>
+            <th>Comment</th>
+            <td>{{dat.text}} </td>
+        </tr>
+        <tr>
+            <th>Usertype</th>
+            <td>{{ dat.usertype }} </td>
+        </tr>
+        <tr>
+            {% if user.usertype==3 %}
+                <th>Action</th>
+                <td>
+                    <br>
+                    {# button to delete user #}
+                    <button id={{ dat.id }} onclick=delid(id)>Delete</button>
+                </td>
+            {% endif %}
+
+        </tr>
+
+             <br> <br>
+    </table>
+{% endfor %}
+
+
+{# Comment Box #}
+<form method="POST">
+    {{ form.csrf_token }}
+    <br>
+    {{ user.username }}
+    <br>
+    {{ form.text.label }} {{ form.text(size=80) }}
+    <input type="submit" value="Reply">
+</form>
+<br>
+
+{# hidden field to pass delete id #}
+<form method="POST">
+    {{ delform.id }}
+    <input id=button type="submit" hidden="true">
+</form>
+
+<br>
+
+{# logout #}
+<form method="POST" action={{ url_for('logout') }}>
+    <input type="submit" value="Logout">
+</form>
+</body>
+
+<script type="text/javascript">
+    function delid(id)
+    {
+        document.getElementById('id').value = id;
+        document.getElementById('button').click();
+    }
+
+</script>
