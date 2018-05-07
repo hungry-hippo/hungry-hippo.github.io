@@ -9,33 +9,75 @@
 <body>
 <h1> Forum </h1>
 {% for dat in data %}
-    <table style="width:100%">
-        <tr>
-            <th>Username</th>
-            <td>{{ dat.username }} </td>
-        </tr>
-        <tr>
-            <th>Comment</th>
-            <td>{{dat.text}} </td>
-        </tr>
-        <tr>
-            <th>Usertype</th>
-            <td>{{ dat.usertype }} </td>
-        </tr>
-        <tr>
-            {% if user.usertype==3 %}
-                <th>Action</th>
-                <td>
-                    <br>
-                    {# button to delete user #}
-                    <button id={{ dat.id }} onclick=delid(id)>Delete</button>
-                </td>
+    <br><br>
+    {% if dat.replyto==0 %}
+        <table style="width:100%">
+            <tr>
+                <th>Username</th>
+                <td>{{ dat.username }} </td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{dat.text}} </td>
+            </tr>
+            <tr>
+                <th>Usertype</th>
+                <td>{{ dat.usertype }} </td>
+            </tr>
+            <tr>
+                {% if user.usertype==3 or user.username==dat.username %}
+                    <th>Action</th>
+                    <td>
+                        {# button to delete user #}
+                        <button id={{ dat.id }} onclick=delid(id)>Delete</button>
+                    </td>
+                {% endif %}
+            </tr>
+        </table>
+        {% for reply in data %}
+            {% if reply.replyto==dat.id %}
+                <table align='right' style="width:75%">
+                    <tr>
+                        <th>Username</th>
+                        <td>{{ reply.username }} </td>
+                    </tr>
+                    <tr>
+                        <th>Comment</th>
+                        <td>{{reply.text}} </td>
+                    </tr>
+                    <tr>
+                        <th>Usertype</th>
+                        <td>{{ reply.usertype }} </td>
+                    </tr>
+                    <tr>
+                        {% if user.usertype==3 or user.username==dat.username %}
+                           <th>Action</th>
+                           <td>
+                               {# button to delete user #}
+                               <button id={{ reply.id }} onclick=delid(id)>Delete</button>
+                           </td>
+                        {% endif %}
+                    </tr>
+                </table>
             {% endif %}
+        {% endfor %}
 
-        </tr>
+        {% if user.usertype==2 or user.username==dat.username %}
+           <form method="POST">
+              {{ form.csrf_token }}
+              <table>
+                  <tr>
+                      <td>{{ form.text.label }}</td>
+                      <td> {{ form.text(size=20) }}</td>
+                      <td>{{ form.repliesto(class_='repliesto') }}</td>
+                      <td><input type="submit" id={{ dat.id }} onclick="replytofunc(id)" value="Reply"></td>
+                  </tr>
+              </table>
+          </form>
 
-             <br> <br>
-    </table>
+        {% endif %}
+     {% endif %}
+    <br>
 {% endfor %}
 
 
@@ -45,10 +87,19 @@
     <br>
     {{ user.username }}
     <br>
-    {{ form.text.label }} {{ form.text(size=80) }}
-    <input type="submit" value="Reply">
+    {{ form.text.label }} {{ form.text(size=167) }}
+    {{ form.repliesto(class_='repliesto') }}
+    <input type="submit" id='0' onclick=replytofunc(id) value="Reply">
 </form>
 <br>
+
+
+<!--<form method="POST">
+    {{ form.text }}
+    {{ form.repliesto }}
+    <input id=button2 type="submit" hidden="true">
+</form>-->
+
 
 {# hidden field to pass delete id #}
 <form method="POST">
@@ -69,6 +120,25 @@
     {
         document.getElementById('id').value = id;
         document.getElementById('button').click();
+    }
+
+    function replytofunc(replyid)
+    {   //window.alert(replyid);
+        //document.write(replyid);
+        var i;
+        var elements = document.getElementsByClassName('repliesto');
+
+        for(i=0; i<elements.length; i++) {
+            elements[i].value = replyid;
+           // window.alert(elements[i]);
+
+        }
+
+        //document.getElementById(('text')).value = replydata;
+        //window.alert(document.getElementById('repliesto').value);
+
+        //document.getElementById('button2').click();
+
     }
 
 </script>

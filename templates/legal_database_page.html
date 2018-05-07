@@ -1,0 +1,61 @@
+<!doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tablestyle.css') }}">
+</head>
+<body>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.chapno.label }} {{ form.chapno(maxsize=20) }} {{form.submitchap}}
+        <br>
+        {{ form.secno.label }} {{ form.secno(maxsize=20) }} {{form.submitsec}}
+    </form>
+    <br><br>
+    {% if laws %}
+        <table>
+            <tr>
+                <th>Chapter No</th>
+                <th>Section No</th>
+                <th>Legal Text</th>
+                <th>Explanation</th>
+                <th>Action</th>
+             </tr>
+            {% for law in laws %}
+                <tr>
+                    <td>{{ law.chapter }}</td>
+                    <td>{{ law.sec }} </td>
+                    <td>{{ law.legal }}</td>
+                    <td>{{ law.exp }}</td>
+                    <td> {# button to delete user #}
+                        <button id="{{ law.sec }}" onclick=delid(id)>Delete</button>
+                    </td>
+                 </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <form method="POST">
+        {{ delform.id }}
+        <input id=button type="submit" hidden="true">
+    </form>
+
+    <form method="POST">
+        <br>
+        {{ addform.chapter.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ addform.chapter }}
+        <br><br>
+       {{ addform.sec.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ addform.sec }}
+        <br><br>
+        {{ addform.legal.label }} {{ addform.legal }}
+        <br><br>
+        {{ addform.exp.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ addform.exp }}
+        <br><br>
+        {{ addform.add }}
+    </form>
+</body>
+
+<script type="text/javascript">
+    function delid(id)
+    {
+        document.getElementById('id').value = id;
+        document.getElementById('button').click();
+    }
+
+</script>

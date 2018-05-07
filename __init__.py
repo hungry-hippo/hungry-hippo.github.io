@@ -15,7 +15,7 @@ app.add_url_rule('/login', SamplePageA.endpoint, view_func=SamplePageA.as_view(S
 app.add_url_rule('/forum', SamplePageB.endpoint, view_func=SamplePageB.as_view(SamplePageB.endpoint), methods=['GET','POST'])
 app.add_url_rule('/useraccess', SamplePageC.endpoint, view_func=SamplePageC.as_view(SamplePageC.endpoint), methods=['GET','POST'])
 app.add_url_rule('/<name>', SamplePageD.endpoint, view_func=SamplePageD.as_view(SamplePageD.endpoint), methods=['GET','POST'])
-app.add_url_rule('/test5', SamplePageE.endpoint, view_func=SamplePageE.as_view(SamplePageE.endpoint), methods=['GET','POST'])
+app.add_url_rule('/legalpage', SamplePageE.endpoint, view_func=SamplePageE.as_view(SamplePageE.endpoint), methods=['GET','POST'])
 app.add_url_rule('/logout', Logout.endpoint, view_func=Logout.as_view(Logout.endpoint), methods=['GET','POST'])
 
 login_manager.login_view = 'sample_page_a'

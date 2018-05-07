@@ -55,13 +55,24 @@ class SamplePageB(View):
         data = Comments.query.all()
         form = CommentForm()
         delform = DeleteForm()
+        #addform = CommentAddForm()
+        #print form.repliesto.data
+        #print 'x'
         if form.validate_on_submit():
-            comment = Comments(current_user.username, form.text.data, current_user.usertype)
+            #print 'y'
+            #print form.repliesto.data
+            comment = Comments(current_user.username, form.text.data, current_user.usertype, form.repliesto.data)
+            #print comment.text
             comment.add_comment()
             return redirect(url_for('sample_page_b'))
         if delform.id.data:
             deluser = Comments.query.filter_by(id=delform.id.data).first()
+            #print deluser
             deluser.delete_comment()
+            replies = Comments.query.filter_by(replyto=delform.id.data).all()
+            for reply in replies:
+                #print reply
+                reply.delete_comment()
             return redirect(url_for('sample_page_b'))
         return render_template('forum.html', form=form, delform=delform, data=data, user=current_user)
 
@@ -125,10 +136,31 @@ class SamplePageD(View):
 #manipulate database
 class SamplePageE(View):
     endpoint = 'sample_page_e'
-    decorators = [login_required, system_admin_or_legal_expert_required]
+    decorators = [login_required, legal_expert_required]
 
     def dispatch_request(self):
-        return 'You need to be logged in and be either a legal expert or system admin to view this page'
+        form = LawsSearchForm()
+        delform = DeleteForm()
+        addform = LawsAddForm()
+        laws=None
+        if form.validate_on_submit():
+            if form.submitchap.data:
+                laws = Laws.query.filter_by(chapter=form.chapno.data).all()
+            if form.submitsec.data:
+                laws = Laws.query.filter_by(sec=form.secno.data).all()
+            redirect(url_for('sample_page_e'))
+        #print delform.id.data
+        if delform.id.data:
+            #print 1
+            deluser = Laws.query.filter_by(sec=delform.id.data).first()
+            deluser.delete_law()
+            #print deluser
+            redirect(url_for('sample_page_e'))
+        if addform.add.data:
+            newlaw = Laws(addform.chapter.data, addform.sec.data, addform.legal.data, addform.exp.data)
+            newlaw.add_law()
+            return redirect(url_for('sample_page_e'))
+        return render_template('legal_database_page.html', form=form, laws=laws, delform=delform, addform=addform)
 
 
 class Logout(View):

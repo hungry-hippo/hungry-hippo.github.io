@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="UTF-8">
+  <script language="JavaScript">
+    function showInput() {
+        var bad=document.getElementById("user_input").value;
+		window.location.href = 'http://localhost:5000/'+ bad
+		
+    }
+  </script>
+
+  </head>
+<body>
+
+  <form>
+    <div id="heading" ><br><br><br><br><b>Find answers to all legal queries!!</b></div>
+	<br><br><br><br><br>
+    <input type="text" name="message" id="user_input">
+  </form>
+	<br>
+	<div id="enter">
+  <input class="button" type="submit" onclick="showInput();" value="Search"><br/>
+  </div>
+</body>
+</html>

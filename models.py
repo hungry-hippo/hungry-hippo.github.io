@@ -49,11 +49,13 @@ class Comments(db.Model, UserMixin):
     username = db.Column(db.String(80), nullable=False)
     text = db.Column(db.String(8000), nullable=False)
     usertype = db.Column(db.INT, nullable=False)
+    replyto = db.Column(db.INT, nullable=False)
 
-    def __init__(self, username, text, usertype):
+    def __init__(self, username, text, usertype, replyto):
         self.username = username
         self.text = text
         self.usertype = usertype
+        self.replyto = replyto
 
     def add_comment(self):
         db.session.add(self)
@@ -75,3 +77,22 @@ class Laws(db.Model):
     sec=db.Column('Section No.',db.VARCHAR,primary_key=True)
     legal=db.Column('Legal Statement as mentioned in the IPC',db.VARCHAR)
     exp=db.Column('Explaination/Illustration of the Legal Statement',db.VARCHAR)
+
+    def __init__(self, chapter, sec, legal, exp):
+        self.chapter = chapter
+        self.sec = sec
+        self.legal = legal
+        self.exp = exp
+
+    def add_law(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_law(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def modify_law(self, newdata):
+        db.session.delete(self)
+        db.session.add(newdata)
+        db.session.commit()
