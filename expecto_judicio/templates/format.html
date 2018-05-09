@@ -1,0 +1,76 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-grid.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-reboot.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script language="JavaScript">
+        function showInput() {
+            var val=document.getElementById("input_id").value;
+            document.write(' ');
+            window.location = 'http://localhost:5000/searchresults/'+ val;
+        }
+    </script>
+    <style>
+
+    </style>
+</head>
+<body class="bg-dark text-light">
+{% extends 'navbar.html' %}
+{% block body %}
+<div class="container">
+    {% if(flag==1) %}
+    <h2 style="padding-top: 60px" class="display-4">Results for your query</h2>
+    <hr class="my-5" style="border: 1px solid #0c5460 !important"/>
+    <ul class="mb-5">
+        {% for item in name %}
+        {% set x = item[2] %}
+        <li>
+            <button class="btn btn-outline-light mb-2" style="cursor: pointer; border: none" data-toggle="modal" data-target="#{{item[0].replace(" ","")}}Modal">
+            {{item[0]}}
+            </button>
+            <div class="modal fade" id="{{item[0].replace(" ","")}}Modal" tabindex="-1" role="dialog" aria-labelledby="{{item[0].replace(" ","")}}ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content text-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="{{item[0].replace(" ","")}}ModalLabel">{{ item[0] }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ item[2] }}
+                    </div>
+                </div>
+            </div>
+
+        </li>
+        {{item[1]}}
+        <hr class="my-4" style="border: 1px solid #0c5460 !important"/>
+        {% endfor %}
+    </ul>
+</div>
+<div id="id01" class="modal">
+
+    <form class="modal-content animate">
+
+        <div class="container">
+            <label id="filler" for="uname"></label>
+            <br><br><br>
+        </div>
+    </form>
+</div>
+{% else %}
+<h2 class="display-4 pt-5">Sorry no Results Found !!</h2>
+<hr class="my-4"/>
+{% endif %}
+
+<div class="footer-copyright m-0 py-3 text-center">
+    © 2018 Copyright:
+    <a href="http://23.236.147.19/wiki/index.php?title=PineapplePizza:Main"> PineapplePizza </a>
+</div>
+{% endblock %}
+
+</body>
+</html>

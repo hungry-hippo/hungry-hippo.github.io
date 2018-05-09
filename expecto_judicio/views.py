@@ -171,7 +171,11 @@ class SearchResults(View):
                     s1.append(tuple(temp))
                     flag = 1
                     break
-        return render_template("format.html", name=s1, loginform=loginform, user=current_user, flag=flag)
+        if flag==1:
+            return render_template("format.html", name=s1, loginform=loginform, user=current_user, flag=flag)
+        else:
+            return render_template('forbidden.html', msg='Sorry No Results Found',
+                                   user=current_user)
 
 
 # manipulate database

@@ -13,9 +13,16 @@
         }, 2000);
 
         function showInput() {
-            var keywords=document.getElementById("user_input").value;
-            window.location.href = '/searchresults/'+ keywords
+            var keywords = document.getElementById("user_input").value;
+            if (keywords == "") {
+                alert("Empty search field");
+            }
+            else {
+                window.location.href = '/searchresults/' + keywords
+            }
         }
+
+
 
         function strip(myString){
             //window.alert(myString);
@@ -125,16 +132,16 @@
 {% block body %}
 
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            {% if message=="Sign Up Successful" %}
-                <div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{ message }}
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+{% for message in messages %}
+{% if message=="Sign Up Successful" %}
+<div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
 {% endwith %}
 
 <div id="myCarousel" class="carousel slide w-100 m-0" data-ride="carousel">
@@ -226,5 +233,11 @@
         </div>
     </div>
 </div>
+
+<div class="footer-copyright m-0 py-3 text-center">
+    © 2018 Copyright:
+    <a href="http://23.236.147.19/wiki/index.php?title=PineapplePizza:Main"> PineapplePizza </a>
+</div>
+
 {% endblock %}
 </body>

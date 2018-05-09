@@ -6,6 +6,11 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap-reboot.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <style>
+        .footer-copyright{
+            position: absolute;
+        }
+    </style>
 </head>
 {% extends 'navbar.html' %}
 {% block body %}
@@ -15,5 +20,10 @@
             {{ msg }}
         </div>
     </div>
+</div>
+
+<div class="footer-copyright m-0 py-3 text-center">
+        © 2018 Copyright:
+        <a href="http://23.236.147.19/wiki/index.php?title=PineapplePizza:Main"> PineapplePizza </a>
 </div>
 {% endblock %}

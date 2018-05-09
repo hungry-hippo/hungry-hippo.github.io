@@ -1,0 +1,12 @@
+flask==0.12.2
+jinja2==2.10
+wtforms==2.1
+flask-WTF==0.14.2
+flask-login==0.4.0
+flask-Bcrypt==0.7.1
+flask-SQLAlchemy==2.3.2
+PyMySQL==0.8.0
+click==6.7
+nltk==3.2.5
+feedparser==5.2.1
+gunicorn

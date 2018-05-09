@@ -18,7 +18,7 @@ def create_app():
     app = Flask(__name__)
 
     # Configure the app
-    app.config.from_object('config')
+    app.config.from_object('expecto_judicio.config')
 
     db.init_app(app)
     login_manager.init_app(app)
