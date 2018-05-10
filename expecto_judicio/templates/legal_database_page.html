@@ -13,9 +13,11 @@
             document.getElementById('button').click();
         }
 
-        function addData(legal, exp) {
-            document.getElementsByClassName('form-control legal')[0].innerHTML=legal;
-            document.getElementsByClassName('form-control legal')[1].innerHTML=exp;
+        function addData(id) {
+            var legal='l' + id;
+            var exp='e' + id;
+            document.getElementsByClassName('form-control legal')[0].innerHTML=document.getElementById(legal).innerHTML.trim();
+            document.getElementsByClassName('form-control legal')[1].innerHTML=document.getElementById(exp).innerHTML.trim();
 
         }
     </script>
@@ -92,7 +94,7 @@
                         <div class="col-2 border-right">
                             Law Statement
                         </div>
-                        <div class="col border-left text-justify" style="margin-right: -17px;overflow-x:  hidden;overflow-y: scroll;">
+                        <div id='l{{law.id}}' class="col border-left text-justify" style="margin-right: -17px;overflow-x:  hidden;overflow-y: scroll;">
                             {{ law.legal }}
                         </div>
                     </div>
@@ -100,7 +102,7 @@
                         <div class="col-2 border-right">
                             Explanation
                         </div>
-                        <div id=class="col border-left text-justify" style="margin-right: -17px;overflow-x:  hidden;overflow-y: scroll;">
+                        <div id='e{{law.id}}' class="col border-left text-justify" style="margin-right: -17px;overflow-x:  hidden;overflow-y: scroll;">
                             {{ law.exp }}
                         </div>
                     </div>
@@ -117,7 +119,7 @@
                     <div class="col-4 row border-left">
                         {# button to modify law #}
                         <button type="button" class="btn btn-outline-info col-5 mr-auto"
-                                onclick="addData( '{{ law.legal }}','{{ law.exp }}' )"
+                                onclick='addData( "{{ law.id }}" )'
                                 data-toggle="modal" data-target="#m{{law.id}}Modal">
                             Modify
                         </button>
@@ -127,7 +129,7 @@
                             <div class="modal-dialog modal-dialog-centered w-75" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="m{{law.id}}ModalLabel" ">Modify Law</h5>
+                                        <h5 class="modal-title" id="m{{law.id}}ModalLabel">Modify Law</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
