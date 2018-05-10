@@ -38,10 +38,10 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         try:
             db.session.commit()
-            return 0
+            flash("Sign Up Successful", category='success')
         except exc.IntegrityError as err:
             db.session.rollback()
-            return 2
+            flash("Username already exists", category='error')
 
     # called to delete a user from the 'user' table
     def delete_user(self):
@@ -73,10 +73,10 @@ class Comments(db.Model, UserMixin):
         db.session.add(self)
         try:
             db.session.commit()
-            return 0
+            flash("Comment Added", category='success')
         except exc.IntegrityError as err:
             db.session.rollback()
-            return 2
+            flash("Error when adding comment", category='error')
 
     #used to delete an existing comment
     def delete_comment(self):
@@ -114,10 +114,10 @@ class Laws(db.Model):
         db.session.add(self)
         try:
             db.session.commit()
-            return 0
+            flash("Law Added", category='success')
         except exc.IntegrityError as err:
             db.session.rollback()
-            return 2
+            flash("Error encountered when adding new law", category='error')
 
     # function to delete existing law
     def delete_law(self):
@@ -131,4 +131,9 @@ class Laws(db.Model):
         self.legal = legal
         self.exp = exp
         self.modifiedby = user
-        db.session.commit()
+        try:
+            db.session.commit()
+            flash("Successfully Modified", category='success')
+        except exc:
+            db.session.rollback()
+            flash("Error encountered when modifying law", category='error')

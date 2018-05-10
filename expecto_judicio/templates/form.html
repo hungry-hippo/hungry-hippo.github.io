@@ -131,17 +131,17 @@
 {% endblock %}
 {% block body %}
 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-{% for message in messages %}
-{% if message=="Sign Up Successful" %}
-<div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    {{ message }}
-</div>
-{% endif %}
-{% endfor %}
-{% endif %}
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category=='success' %}
+                <div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endwith %}
 
 <div id="myCarousel" class="carousel slide w-100 m-0" data-ride="carousel">
@@ -151,7 +151,6 @@
         <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner">
-
         <div class="carousel-item active">
             <img class="first-slide" src="{{ url_for('static', filename='./images/homecar1.jpg') }}" alt="First slide">
             <div class="container">

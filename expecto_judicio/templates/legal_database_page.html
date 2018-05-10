@@ -54,6 +54,22 @@
             {% endfor %}
             {% endif %}
 
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            {% if category=='success' %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% else %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
             {% if laws %}
             {% for law in laws %}
             <div class="card text-center rounded-0 my-2 border">
@@ -88,9 +104,9 @@
                         Added by {{ law.addedby }}
                     </div>
                     <div class="col-4 border-left border-right">
-                    {% if not law.modifiedby=='_' %}
+                        {% if not law.modifiedby=='_' %}
                         Modified by {{ law.modifiedby }}
-                    {% endif %}
+                        {% endif %}
                     </div>
                     <div class="col-4 row border-left">
                         {# button to modify law #}

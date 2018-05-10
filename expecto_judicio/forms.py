@@ -106,22 +106,20 @@ class LawsAddForm(FlaskForm):
     sec = StringField('Section No: ', validators=[DataRequired("Section Number Required"),
                                         Length(max=200, message="Section length cannot be greater than 200")])
     legal = TextAreaField('Legal Statement: ', validators=[DataRequired("Statement Required"),
-                                        Length(max=200, message="Legal Statement length cannot be greater than 8000")])
+                                        Length(max=80000, message="Legal Statement length cannot be greater than 8000")])
     exp = TextAreaField('Explanation: ', validators=[DataRequired("Explanation Required"),
-                                        Length(max=200, message="Explanation length cannot be greater than 8000")])
+                                        Length(max=8000, message="Explanation length cannot be greater than 8000")])
     add = SubmitField('Add')
 
 
 # this class will be called when the legal expert wants to modify an existing law in the database.
 class LawsModifyForm(FlaskForm):
-    chapter = StringField('Chapter No: ', validators=[DataRequired("Chapter Name Required"),
-                                        Length(max=200, message="Chapter length cannot be greater than 200")])
-    sec = StringField('Section No: ', validators=[DataRequired("Section Number Required"),
-                                        Length(max=200, message="Section length cannot be greater than 200")])
-    legal = TextAreaField('Legal Statement: ', validators=[DataRequired("Statement Required"),
-                                        Length(max=200, message="Legal Statement length cannot be greater than 8000")])
-    exp = TextAreaField('Explanation: ', validators=[DataRequired("Explanation Required"),
-                                        Length(max=200,  message="Explanation length cannot be greater than 8000")])
+    chapter = StringField('Chapter No: ', validators=None)
+    sec = StringField('Section No: ', validators=None)
+    legal = StringField('Legal Statement: ', validators=[DataRequired("Statement Required"),
+                                        Length(max=8000, message="Legal Statement length cannot be greater than 8000")])
+    exp = StringField('Explanation: ', validators=[DataRequired("Explanation Required"),
+                                        Length(max=8000,  message="Explanation length cannot be greater than 8000")])
     modify = SubmitField('Modify')
 
     # the id field has been hidden as it is the primary key of the table and it would be auto-incremented.

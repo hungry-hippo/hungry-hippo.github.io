@@ -53,4 +53,4 @@ def drop_db():
 
 if __name__ == '__main__':
     # set debug to false when moving to production
-    app.run()
+    app.run(debug=True)

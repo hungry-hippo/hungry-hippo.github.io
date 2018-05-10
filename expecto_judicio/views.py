@@ -63,6 +63,7 @@ class HomePage(View):
                 if auth:
                     login_user(user)
                     flag=0
+                    flash("Login Successful", category='success')
                     return redirect(url_for('home_page'))
                 else:
                     incorrect = 'Invalid Password'
@@ -78,12 +79,9 @@ class HomePage(View):
         # adding new user using the sign up form
         if signupform.validate_on_submit():
             newuser = User(signupform.usernameS.data,signupform.passwordS.data, 1)
-            flag = newuser.add_user()
-            if flag==2:
-                flash("Username already exists")
-            else:
-                #return redirect(url_for('home_page'))
-                flash("Sign Up Successful")
+            newuser.add_user()
+            flag=0
+            return redirect(url_for('home_page'))
 
         # error occurs below block would execute if any
         elif signupform.submit2.data:
@@ -113,12 +111,8 @@ class ManageUsers(View):
 
         if form.validate_on_submit():
             newuser = User(form.username.data, form.password.data,int(form.usertype.data))
-            flag=newuser.add_user()
-            if flag == 2:
-                flash("Username already exists")
-            else:
-                flash("Sign Up Successful")
-                return redirect(url_for('manage_users'))
+            newuser.add_user()
+            return redirect(url_for('manage_users'))
 
         return render_template('manage_users.html', delform=delform, form=form, data=data, loginform=loginform,
                                user=current_user)
@@ -204,16 +198,17 @@ class LegalDatabaseAccess(View):
             redirect(url_for('legal_database_access'))
 
         # add to database
-        if addform.validate_on_submit():
+        if addform.validate_on_submit() and addform.add.data:
             newlaw = Laws(addform.chapter.data, addform.sec.data, addform.legal.data, addform.exp.data, current_user.username)
             newlaw.add_law()
             return redirect(url_for('legal_database_access'))
 
         # modify database
-        if modform.validate_on_submit():
+        if modform.validate_on_submit() and modform.modify.data:
             id = modform.modifyid.data
             modified = Laws.query.filter_by(id=id).first()
             modified.modify_law(modform.chapter.data,modform.sec.data,modform.legal.data,modform.exp.data,current_user.username)
+            return redirect(url_for('legal_database_access'))
 
         return render_template('legal_database_page.html', form=form, laws=laws, delform=delform, addform=addform,
                                loginform=loginform, user=current_user, modform=modform)
