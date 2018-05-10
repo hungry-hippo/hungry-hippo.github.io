@@ -116,9 +116,9 @@ class LawsAddForm(FlaskForm):
 class LawsModifyForm(FlaskForm):
     chapter = StringField('Chapter No: ', validators=None)
     sec = StringField('Section No: ', validators=None)
-    legal = StringField('Legal Statement: ', validators=[DataRequired("Statement Required"),
+    legal = TextAreaField('Legal Statement: ', validators=[DataRequired("Statement Required"),
                                         Length(max=8000, message="Legal Statement length cannot be greater than 8000")])
-    exp = StringField('Explanation: ', validators=[DataRequired("Explanation Required"),
+    exp = TextAreaField('Explanation: ', validators=[DataRequired("Explanation Required"),
                                         Length(max=8000,  message="Explanation length cannot be greater than 8000")])
     modify = SubmitField('Modify')
 
