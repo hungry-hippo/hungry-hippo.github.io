@@ -1,4 +1,5 @@
 <!doctype html>
+<html class="h-100">
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='homestyle.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./css/bootstrap.css') }}">
@@ -37,7 +38,7 @@
         }
     </script>
 </head>
-<body onload="errorFunc({{ flag }})">
+<body onload="errorFunc({{ flag }})" class="h-100">
 {% extends 'navbar.html' %}
 {% block login %}
 <li class="nav-item">
@@ -132,16 +133,21 @@
 {% block body %}
 
 {% with messages = get_flashed_messages(with_categories=True) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            {% if category=='success' %}
-                <div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{ message }}
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+{% for category, message in messages %}
+{% if category=='success' %}
+<div id = "signsuccess" style="z-index: 17;" class="alert alert-success alert-dismissible" role="alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ message }}
+</div>
+{% elif category=='error1' %}
+<div id = "signsuccess" style="z-index: 17;" class="alert alert-danger alert-dismissible" role="alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
 {% endwith %}
 
 <div id="myCarousel" class="carousel slide w-100 m-0" data-ride="carousel">
@@ -240,3 +246,4 @@
 
 {% endblock %}
 </body>
+</html>

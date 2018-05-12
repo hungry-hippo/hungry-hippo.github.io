@@ -40,8 +40,9 @@ class User(db.Model, UserMixin):
             db.session.commit()
             flash("Sign Up Successful", category='success')
         except exc.IntegrityError as err:
+            print err
+            flash("Username already exists", category='error1')
             db.session.rollback()
-            flash("Username already exists", category='error')
 
     # called to delete a user from the 'user' table
     def delete_user(self):
@@ -107,7 +108,7 @@ class Laws(db.Model):
         self.legal = legal
         self.exp = exp
         self.addedby = addedby
-        self.modifiedby = '-'
+        self.modifiedby = '_'
 
     # function to add new law in the database
     def add_law(self):
@@ -123,6 +124,8 @@ class Laws(db.Model):
     def delete_law(self):
         db.session.delete(self)
         db.session.commit()
+        flash("Deleted", category='error')
+        print 1
 
     # function to modify existing law, maybe the chapter no., section no., etc
     def modify_law(self, chapter,sec,legal,exp,user):

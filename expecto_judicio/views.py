@@ -121,7 +121,8 @@ class ManageUsers(View):
 #SearchResults
 class SearchResults(View):
     endpoint = 'search_results'
-    #decorators = [login_required, legal_expert_required]
+
+    # decorators = [login_required, legal_expert_required]
 
     def dispatch_request(self, name):
         loginform = LoginForm()
@@ -130,7 +131,8 @@ class SearchResults(View):
         example = Laws.query.all()
         s1 = []
         flag = 0
-        tokenizer = RegexpTokenizer(r'\w+')
+        sflag = 0
+        tokenizer = RegexpTokenizer(r'\w+')  # type: RegexpTokenizer
 
         # make a set of all stopwords
         stop_words = set(stopwords.words('english'))
@@ -142,16 +144,24 @@ class SearchResults(View):
         query = tokenizer.tokenize(name)
 
         # remove the stop-words from the list of search words
-        filtered_query = [w for w in query if not w in stop_words]
-
+        filtered_query = [str(w) for w in query if not w in stop_words]
+        if 'section' in filtered_query:
+            test_query = list(filter(str.isdigit, filtered_query))
+            if test_query:
+                sflag=1
+                filtered_query = test_query
+            else:
+                filtered_query.remove('section')
         # matching the search words with the laws present in the database
         for ex in example:
-            words = tokenizer.tokenize(ex.legal)
+            if sflag==1:
+                words = tokenizer.tokenize(ex.sec)
+            else:
+                words = tokenizer.tokenize(ex.legal)
             words1 = []
             for word in words:
-                if word[0] == '"':
-                    l = len(word)
-                    word = word[1:l - 1]
+                if '"' in word:
+                    word.replace('"', '')
                 words1.append(word.lower())
             for nm in filtered_query:
                 if nm in words1:
@@ -161,16 +171,15 @@ class SearchResults(View):
                     for i in [ex.sec, ex.legal, ex.exp]:
                         temp.append(i)
 
-                    #make a list of all the matched legal explanations
+                    # make a list of all the matched legal explanations
                     s1.append(tuple(temp))
                     flag = 1
                     break
-        if flag==1:
+        if flag == 1:
             return render_template("format.html", name=s1, loginform=loginform, user=current_user, flag=flag)
         else:
             return render_template('forbidden.html', msg='Sorry No Results Found',
                                    user=current_user)
-
 
 # manipulate database
 class LegalDatabaseAccess(View):
@@ -185,16 +194,17 @@ class LegalDatabaseAccess(View):
         modform = LawsModifyForm()
         laws=None
 
+        # delete the comment selected
+        #print delform.id.data
+        if delform.id.data:
+            deluser = Laws.query.filter_by(id=delform.id.data).first()
+            deluser.delete_law()
+            return redirect(url_for('legal_database_access'))
+
         # display laws
         if form.validate_on_submit():
             if form.submitchap.data:
                 laws = Laws.query.filter_by(chapter=form.chapno.data).all()
-            redirect(url_for('legal_database_access'))
-
-        # delete the comment selected
-        if delform.id.data:
-            deluser = Laws.query.filter_by(id=delform.id.data).first()
-            deluser.delete_law()
             redirect(url_for('legal_database_access'))
 
         # add to database
